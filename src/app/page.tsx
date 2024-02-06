@@ -7,7 +7,7 @@ export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
 
   return (
-    <main className="flex h-screen flex-col items-center justify-between ">
+    <main className="flex h-screen flex-col items-center ">
       
 
       <ChatLayout 

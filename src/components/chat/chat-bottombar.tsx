@@ -6,19 +6,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "../ui/button";
-import {
-  FileImage,
-  Mic,
-  Paperclip,
-  PlusCircle,
-  SendHorizontal,
-  StopCircle,
-  ThumbsUp,
-} from "lucide-react";
+import TextareaAutosize from "react-textarea-autosize";
 import { motion, AnimatePresence } from "framer-motion";
 import { Textarea } from "../ui/textarea";
 import { EmojiPicker } from "../emoji-picker";
-import { StopIcon } from "@radix-ui/react-icons";
+import { ImageIcon, PaperPlaneIcon, StopIcon } from "@radix-ui/react-icons";
 
 export default function ChatBottombar({
   messages,
@@ -53,12 +45,11 @@ export default function ChatBottombar({
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit;
     }
   };
 
   return (
-    <div className="p-2 flex justify-between w-full items-center gap-2">
+    <div className="p-4 flex justify-between w-full items-center gap-2">
       <AnimatePresence initial={false}>
         <motion.div
           key="input"
@@ -75,20 +66,19 @@ export default function ChatBottombar({
             },
           }}
         >
-          <form onSubmit={handleSubmit} className="w-full flex relative gap-2">
+          <form onSubmit={handleSubmit} className="w-full items-center flex relative gap-2">
             <div className="flex">
               <Link
                 href="#"
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "icon" }),
-                  "h-9 w-9"
                 )}
               >
-                <FileImage size={20} className="text-muted-foreground" />
+                <ImageIcon className="w-6 h-6 text-muted-foreground" />
               </Link>
             </div>
 
-            <Textarea
+            <TextareaAutosize 
               autoComplete="off"
               value={input}
               ref={inputRef}
@@ -96,16 +86,15 @@ export default function ChatBottombar({
               onChange={handleInputChange}
               name="message"
               placeholder="Aa"
-              className=" w-full border rounded-full flex items-center h-9 resize-none overflow-hidden bg-background"
+              className="border-input max-h-20 px-5 py-4 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full border rounded-full flex items-center h-11 resize-none overflow-hidden bg-card/40"
             />
-
               {!isLoading ? (
-                <Button variant="ghost" size="icon" type="submit" disabled={isLoading}>
-                <SendHorizontal size={20} className="text-muted-foreground" />
+                <Button variant="ghost" size="icon" type="submit" disabled={isLoading || !input.trim()}>
+                <PaperPlaneIcon className=" w-6 h-6 text-muted-foreground" />
               </Button>
               ) : (
                 <Button variant="ghost" size="icon" onClick={stop} >
-              <StopIcon className="w-4 h-4 text-muted-foreground" />
+              <StopIcon className="w-6 h-6  text-muted-foreground" />
             </Button>
               )}
             

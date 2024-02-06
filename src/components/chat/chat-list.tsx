@@ -12,27 +12,28 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
   const scrollToBottom = () => {
     const lastMessage = messagesContainerRef.current?.lastElementChild as HTMLElement;
     if (lastMessage) {
-      lastMessage.scrollIntoView({  });
+      lastMessage.scrollIntoView({ behavior: "smooth", block: "end"});
     }
   };
-  
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+
   return (
-    <div className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col">
+    <div className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end">
       <div
         ref={messagesContainerRef}
-        className="w-full flex flex-col min-h-full"
+        className="w-full flex flex-col overflow-x-hidden overflow-y-hidden min-h-full justify-end"
       >
-        {messages?.map((message, index) => (
+        {messages.map((message, index) => (
           <motion.div
             key={index}
             layout="position"
             initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, scale: 1, y: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 1, y: 50, x: 0 }}
             transition={{
               opacity: { duration: 0.1 },
               layout: {
@@ -52,11 +53,11 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
           >
             <div className="flex gap-3 items-center">
               {message.role === "user" && (
-                <>
+                <div className="flex items-end gap-2">
                   <span className="bg-accent p-3 rounded-md max-w-2xl">
                     {message.content}
                   </span>
-                  <Avatar className="flex justify-center items-center">
+                  <Avatar className="flex justify-start items-center">
                     <AvatarImage
                       src="/user.jpg"
                       alt="AI"
@@ -65,11 +66,11 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                       className="object-contain"
                     />
                   </Avatar>
-                </>
+                </div>
               )}
               {message.role === "assistant" && (
-                <>
-                  <Avatar className="flex justify-center items-center">
+                <div className="flex items-end">
+                  <Avatar className="flex justify-start items-center">
                     <AvatarImage
                       src="/ollama.png"
                       alt="AI"
@@ -86,12 +87,12 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                       </span>
                     )}
                   </span>
-                </>
+                </div>
               )}
             </div>
           </motion.div>
         ))}
       </div>
     </div>
-  )
+  );
 }
