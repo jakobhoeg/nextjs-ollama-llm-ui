@@ -86,7 +86,7 @@ export default function ChatBottombar({
               onChange={handleInputChange}
               name="message"
               placeholder="Aa"
-              className="border-input max-h-20 px-5 py-4 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full border rounded-full flex items-center h-11 resize-none overflow-hidden bg-card/40"
+              className="border-input max-h-20 px-5 py-4 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full border rounded-full flex items-center h-11 resize-none overflow-hidden bg-card/35"
             />
               {!isLoading ? (
                 <Button variant="ghost" size="icon" type="submit" disabled={isLoading || !input.trim()}>

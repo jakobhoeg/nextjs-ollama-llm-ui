@@ -53,7 +53,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
           >
             <div className="flex gap-3 items-center">
               {message.role === "user" && (
-                <div className="flex items-end gap-2">
+                <div className="flex items-end gap-3">
                   <span className="bg-accent p-3 rounded-md max-w-2xl">
                     {message.content}
                   </span>
@@ -69,7 +69,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                 </div>
               )}
               {message.role === "assistant" && (
-                <div className="flex items-end">
+                <div className="flex items-end gap-2">
                   <Avatar className="flex justify-start items-center">
                     <AvatarImage
                       src="/ollama.png"

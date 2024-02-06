@@ -25,7 +25,7 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className="relative group bg-card/40 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
+      className="relative group bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
     >
         <div className="flex justify-between p-2 items-center">
             <Link
