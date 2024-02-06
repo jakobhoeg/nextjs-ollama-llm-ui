@@ -8,14 +8,14 @@ export default function Home() {
 
   return (
     <main className="flex h-screen flex-col items-center justify-between ">
-      <div className="z-10 w-full items-center text-sm lg:flex">
+      
 
       <ChatLayout 
       navCollapsedSize={8}
-      defaultLayout={[320, 480]}
+      defaultLayout={[120, 200]}
       />
 
-      </div>
+
     </main>
   );
 }

@@ -9,6 +9,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Sidebar } from "../sidebar";
 import { useChat } from "ai/react";
+import Chat from "./chat";
+import ChatList from "./chat-list";
 
 interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
@@ -22,10 +24,8 @@ export function ChatLayout({
   navCollapsedSize,
 }: ChatLayoutProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const { messages, input, handleInputChange, handleSubmit } = useChat();
-
 
   useEffect(() => {
     const checkScreenWidth = () => {
@@ -58,8 +58,8 @@ export function ChatLayout({
         defaultSize={defaultLayout[0]}
         collapsedSize={navCollapsedSize}
         // collapsible={true}
-        minSize={isMobile ? 0 : 24}
-        maxSize={isMobile ? 8 : 30}
+        minSize={isMobile ? 0 : 15}
+        maxSize={isMobile ? 8 : 24}
         onCollapse={() => {
           setIsCollapsed(true);
           document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
@@ -73,7 +73,8 @@ export function ChatLayout({
           )}`;
         }}
         className={cn(
-          isCollapsed && "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
+          isCollapsed &&
+            "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
         )}
       >
         <Sidebar
@@ -83,26 +84,12 @@ export function ChatLayout({
         />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel className="h-screen" defaultSize={defaultLayout[1]} minSize={30}>
-          <div>
-          {messages.length > 0
-        ? messages.map(m => (
-            <div key={m.id} className="whitespace-pre-wrap mb-4">
-              <b>{m.role === 'user' ? 'You: ' : 'AI: '}</b>
-              {m.content}
-            </div>
-          ))
-        : null}
-
-      <form onSubmit={handleSubmit}>
-        <input
-          className="fixed w-full max-w-md bottom-0 border border-gray-300 rounded mb-8 shadow-xl p-2"
-          value={input}
-          placeholder="Say something..."
-          onChange={handleInputChange}
-        />
-      </form>
-          </div>
+      <ResizablePanel
+        className="h-screen"
+        defaultSize={defaultLayout[1]}
+        minSize={30}
+      >
+        <Chat />
       </ResizablePanel>
     </ResizablePanelGroup>
   );
