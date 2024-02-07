@@ -30,6 +30,7 @@ export default function Page({ params }: { params: { id: string } }) {
     React.useEffect(() => {
       if (!isLoading && !error && messages.length > 0) {
         localStorage.setItem(`chat_${params.id}`, JSON.stringify(messages));
+        window.dispatchEvent(new Event("storage"));
       }
     }, [messages, chatId, isLoading, error]);
   
@@ -43,8 +44,8 @@ export default function Page({ params }: { params: { id: string } }) {
           isLoading={isLoading}
           error={error}
           stop={stop}
-          navCollapsedSize={8}
-          defaultLayout={[120, 200]}
+          navCollapsedSize={10}
+          defaultLayout={[30, 70]}
         />
       </main>
     );

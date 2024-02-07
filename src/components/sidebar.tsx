@@ -20,9 +20,15 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
 
   useEffect(() => {
     setLocalChats(getLocalstorageChats());
-  }
-  , [messages,]);
-
+    const handleStorageChange = () => {
+      console.log("Change to local storage!");
+      setLocalChats(getLocalstorageChats());
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const getLocalstorageChats = (): { chatId: string; messages: Message[] }[] => {
     const chats = Object.keys(localStorage).filter((key) => key.startsWith("chat_"));
@@ -42,6 +48,11 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
     return chatObjects;
   }
   
+
+  const handleDeleteChat = (chatId: string) => {
+    localStorage.removeItem(chatId);
+    setLocalChats(getLocalstorageChats());
+  };
 
 
   return (
@@ -64,7 +75,7 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
               alt="AI"
               width={28}
               height={28}
-              className="dark:invert hidden lg:block"
+              className="dark:invert hidden xl:block"
             />
            )}
             New chat
@@ -92,7 +103,13 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
                 </span>
               </div>
             </div>
-            <MoreHorizontal size={15} className="ml-4 shrink-0 flex" />
+            <MoreHorizontal size={15} className="ml-4 shrink-0 flex" onClick={
+              (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleDeleteChat(chatId);
+              }
+            } />
           </Link>
         ))}
         </div>

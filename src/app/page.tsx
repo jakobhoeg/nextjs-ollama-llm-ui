@@ -22,6 +22,7 @@ export default function Home() {
     if (!isLoading && !error && chatId && messages.length > 0) {
       // Save messages to local storage
       localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
+      window.dispatchEvent(new Event("storage"));
     }
   }, [messages, chatId, isLoading, error]);
 
@@ -49,8 +50,8 @@ export default function Home() {
         isLoading={isLoading}
         error={error}
         stop={stop}
-        navCollapsedSize={14}
-        defaultLayout={[30, 70]}
+        navCollapsedSize={10}
+        defaultLayout={[30, 160]}
       />
     </main>
   );

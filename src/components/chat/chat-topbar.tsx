@@ -14,7 +14,7 @@ import { ChevronDown } from 'lucide-react'
 
 export default function ChatTopbar() {
   return (
-    <div className='w-full flex px-4 py-6  items-center '>
+    <div className='w-full flex px-4 py-6  items-center justify-center '>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className='flex gap-2 items-center'>

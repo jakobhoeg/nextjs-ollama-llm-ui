@@ -22,7 +22,7 @@ type MergedProps = ChatLayoutProps & ChatProps;
 
 
 export function ChatLayout({
-  defaultLayout = [30, 70],
+  defaultLayout = [30, 160],
   defaultCollapsed = false,
   navCollapsedSize,
   messages,
@@ -39,7 +39,7 @@ export function ChatLayout({
   
   useEffect(() => {
     const checkScreenWidth = () => {
-      setIsMobile(window.innerWidth <= 1200);
+      setIsMobile(window.innerWidth <= 900);
     };
 
     // Initial check
@@ -68,8 +68,8 @@ export function ChatLayout({
         defaultSize={defaultLayout[0]}
         collapsedSize={navCollapsedSize}
         collapsible={true}
-        minSize={isMobile ? 0 : 18}
-        maxSize={isMobile ? 0 : 26}
+        minSize={isMobile ? 0 : 12}
+        maxSize={isMobile ? 0 : 16}
         onCollapse={() => {
           setIsCollapsed(true);
           document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(

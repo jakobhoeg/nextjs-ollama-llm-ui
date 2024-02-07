@@ -48,10 +48,10 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
         {messages.map((message, index) => (
           <motion.div
             key={index}
-            layout="position"
-            initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
+            layout
+            initial={{ opacity: 0, scale: 1, y: 20, x: 0 }}
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, scale: 1, y: 50, x: 0 }}
+            exit={{ opacity: 0, scale: 1, y: 20, x: 0 }}
             transition={{
               opacity: { duration: 0.1 },
               layout: {
