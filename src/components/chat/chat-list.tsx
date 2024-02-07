@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { ChatProps } from "./chat";
 import { ScrollArea } from "../ui/scroll-area";
+import Image from "next/image";
 
 export default function ChatList({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop }: ChatProps) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -20,6 +21,23 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
     scrollToBottom();
   }, [messages]);
 
+  
+  if (messages.length === 0) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <div className="flex flex-col gap-4 items-center">
+            <Image
+              src="/ollama.png"
+              alt="AI"
+              width={60}
+              height={60}
+              className="h-20 w-20 object-contain dark:invert"
+            />
+          <p className="text-center text-lg text-muted-foreground">How can I help you today?</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end">
@@ -76,7 +94,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                       alt="AI"
                       width={6}
                       height={6}
-                      className="object-contain invert"
+                      className="object-contain dark:invert"
                     />
                   </Avatar>
                   <span className="bg-accent p-3 rounded-md max-w-2xl">

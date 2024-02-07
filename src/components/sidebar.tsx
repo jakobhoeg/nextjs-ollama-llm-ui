@@ -25,23 +25,23 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className="relative group bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
+      className="relative group bg-accent/20 dark:bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
     >
         <div className="flex justify-between p-2 items-center">
             <Link
               href="#"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "flex justify-between w-full h-14 text-lg font-normal items-center "
+                "flex justify-between w-full h-14 text-base font-normal items-center "
               )}
             >
-             <div className="flex gap-4 items-center">
+             <div className="flex gap-3 items-center">
              <Image
                 src="/ollama.png"
                 alt="AI"
                 width={28}
                 height={28}
-                className="invert"
+                className="dark:invert"
               />
               New chat
              </div>
