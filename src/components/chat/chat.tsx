@@ -16,39 +16,7 @@ export interface ChatProps {
   stop: () => void;
   }
 
-export default function Chat() {
-
-const { messages, input, handleInputChange, handleSubmit, isLoading, error, stop, setMessages  } = useChat();
-const [chatId, setChatId] = React.useState<string>('');
-
-React.useEffect(() => {
-  console.log('chatId', chatId);
-}, [chatId]);
-
-React.useEffect(() => {
-  
-  if (!isLoading && !error) {
-    // Save messages to local storage
-  localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
-  }
-
-}, [messages, chatId, isLoading, error]);
-
-const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-
-  if (messages.length === 0) {
-    // Generate a random id for the chat
-  const id = uuidv4();
-  setChatId(id);
-  }
-
-  setMessages([
-    ...messages,
-  ]);
-
-  handleSubmit(e);
-}
+export default function ({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop }: ChatProps) {
 
   return (
     <div className="flex flex-col justify-between w-full h-full  ">
@@ -58,7 +26,7 @@ const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
           messages={messages}
           input={input}
           handleInputChange={handleInputChange}
-          handleSubmit={onSubmit}
+          handleSubmit={handleSubmit}
           isLoading={isLoading}
           error={error}
           stop={stop}
@@ -68,7 +36,7 @@ const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
           messages={messages}
           input={input}
           handleInputChange={handleInputChange}
-          handleSubmit={onSubmit}
+          handleSubmit={handleSubmit}
           isLoading={isLoading}
           error={error}
           stop={stop}

@@ -9,7 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Sidebar } from "../sidebar";
 import { useChat } from "ai/react";
-import Chat from "./chat";
+import Chat, { ChatProps } from "./chat";
 import ChatList from "./chat-list";
 
 interface ChatLayoutProps {
@@ -18,15 +18,25 @@ interface ChatLayoutProps {
   navCollapsedSize: number;
 }
 
+type MergedProps = ChatLayoutProps & ChatProps;
+
+
 export function ChatLayout({
-  defaultLayout = [320, 480],
+  defaultLayout = [120, 280],
   defaultCollapsed = false,
   navCollapsedSize,
-}: ChatLayoutProps) {
+  messages,
+  input,
+  handleInputChange,
+  handleSubmit,
+  isLoading,
+  error,
+  stop,
+}: MergedProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const [isMobile, setIsMobile] = useState(false);
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
 
+  
   useEffect(() => {
     const checkScreenWidth = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -89,7 +99,15 @@ export function ChatLayout({
         defaultSize={defaultLayout[1]}
         minSize={30}
       >
-        <Chat />
+        <Chat 
+           messages={messages}
+           input={input}
+           handleInputChange={handleInputChange}
+           handleSubmit={handleSubmit}
+           isLoading={isLoading}
+           error={error}
+           stop={stop}
+        />
       </ResizablePanel>
     </ResizablePanelGroup>
   );

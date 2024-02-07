@@ -4,15 +4,9 @@ import Link from "next/link";
 import { MoreHorizontal, SquarePen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
-import { Avatar, AvatarImage } from "./ui/avatar";
 import { Message } from "ai/react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -22,6 +16,27 @@ interface SidebarProps {
 }
 
 export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
+  const [localChats, setLocalChats] = useState<{ chatId: string; messages: Message[] }[]>([]);
+
+  useEffect(() => {
+
+    setLocalChats(getLocalstorageChats());
+
+  }
+  , [messages, localStorage]);
+
+
+  const getLocalstorageChats = (): { chatId: string; messages: Message[] }[] => {
+    const chats = Object.keys(localStorage).filter((key) => key.startsWith("chat_"));
+    // Map through the chats and return an object with chatId and messages
+    return chats.map((chat) => {
+      const item = localStorage.getItem(chat);
+      return item ? { chatId: chat, messages: JSON.parse(item) } : { chatId: '', messages: [] };
+    });
+  }
+  
+
+
   return (
     <div
       data-collapsed={isCollapsed}
@@ -29,7 +44,7 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
     >
         <div className="flex justify-between p-2 items-center">
             <Link
-              href="#"
+              href="/"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
                 "flex justify-between w-full h-14 text-base font-normal items-center "
@@ -48,6 +63,31 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
               <SquarePen size={18} />
             </Link>
         </div>
+
+        <div className="flex flex-col px-2 pt-2 gap-2">
+          <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
+          {localChats.map(({ chatId, messages }, index) => (
+            <Link
+            key={index}
+            href={`/${chatId.substr(5)}`}
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "flex justify-between w-full h-14 text-base font-normal items-center "
+            )}
+          >
+            <div className="flex gap-3 items-center">
+              <div className="flex flex-col">
+                <span className="text-xs font-normal text-text/normal truncate">
+                  {messages.length > 0 ? messages[0].content : ''}
+                </span>
+              </div>
+            </div>
+            <MoreHorizontal size={15} />
+          </Link>
+        ))}
+        </div>
+
+
     </div>
   );
 }
