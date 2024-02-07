@@ -19,9 +19,7 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   const [localChats, setLocalChats] = useState<{ chatId: string; messages: Message[] }[]>([]);
 
   useEffect(() => {
-
     setLocalChats(getLocalstorageChats());
-
   }
   , [messages, localStorage]);
 
@@ -29,10 +27,19 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   const getLocalstorageChats = (): { chatId: string; messages: Message[] }[] => {
     const chats = Object.keys(localStorage).filter((key) => key.startsWith("chat_"));
     // Map through the chats and return an object with chatId and messages
-    return chats.map((chat) => {
+    const chatObjects = chats.map((chat) => {
       const item = localStorage.getItem(chat);
       return item ? { chatId: chat, messages: JSON.parse(item) } : { chatId: '', messages: [] };
     });
+
+    // Sort chats by the createdAt date of the first message of each chat
+    chatObjects.sort((a, b) => {
+      const aDate = new Date(a.messages[0].createdAt);
+      const bDate = new Date(b.messages[0].createdAt);
+      return bDate.getTime() - aDate.getTime();
+    });
+      
+    return chatObjects;
   }
   
 
@@ -75,14 +82,14 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
               "flex justify-between w-full h-14 text-base font-normal items-center "
             )}
           >
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-center truncate">
               <div className="flex flex-col">
-                <span className="text-xs font-normal text-text/normal truncate">
+                <span className="text-xs font-normal ">
                   {messages.length > 0 ? messages[0].content : ''}
                 </span>
               </div>
             </div>
-            <MoreHorizontal size={15} />
+            <MoreHorizontal size={15} className="ml-4 shrink-0 flex" />
           </Link>
         ))}
         </div>
