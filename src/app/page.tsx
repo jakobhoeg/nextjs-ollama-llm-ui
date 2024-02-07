@@ -49,8 +49,8 @@ export default function Home() {
         isLoading={isLoading}
         error={error}
         stop={stop}
-        navCollapsedSize={8}
-        defaultLayout={[120, 200]}
+        navCollapsedSize={14}
+        defaultLayout={[30, 70]}
       />
     </main>
   );

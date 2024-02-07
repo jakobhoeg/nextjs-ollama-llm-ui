@@ -21,7 +21,7 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   useEffect(() => {
     setLocalChats(getLocalstorageChats());
   }
-  , [messages, localStorage]);
+  , [messages,]);
 
 
   const getLocalstorageChats = (): { chatId: string; messages: Message[] }[] => {
@@ -49,27 +49,30 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
       data-collapsed={isCollapsed}
       className="relative group bg-accent/20 dark:bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
     >
-        <div className="flex justify-between p-2 items-center">
-            <Link
-              href="/"
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                "flex justify-between w-full h-14 text-base font-normal items-center "
-              )}
-            >
-             <div className="flex gap-3 items-center">
-             <Image
-                src="/ollama.png"
-                alt="AI"
-                width={28}
-                height={28}
-                className="dark:invert"
-              />
-              New chat
-             </div>
-              <SquarePen size={18} />
-            </Link>
-        </div>
+          <div className="flex justify-between p-2 items-center">
+          <Link
+            href="/"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "flex justify-between w-full h-14 text-base font-normal items-center "
+            )}
+          >
+           <div className="flex gap-3 items-center">
+           {!isCollapsed && !isMobile && (
+           <Image
+              src="/ollama.png"
+              alt="AI"
+              width={28}
+              height={28}
+              className="dark:invert hidden lg:block"
+            />
+           )}
+            New chat
+           </div>
+            <SquarePen size={18} className="shrink-0" />
+          </Link>
+      </div>
+
 
         <div className="flex flex-col px-2 pt-2 gap-2">
           <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
