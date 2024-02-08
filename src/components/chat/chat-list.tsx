@@ -8,13 +8,10 @@ import { ScrollArea } from "../ui/scroll-area";
 import Image from "next/image";
 
 export default function ChatList({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop }: ChatProps) {
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    const lastMessage = messagesContainerRef.current?.lastElementChild as HTMLElement;
-    if (lastMessage) {
-      lastMessage.scrollIntoView({ behavior: "smooth", block: "end"});
-    }
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end"});
   };
 
   useEffect(() => {
@@ -40,9 +37,9 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
   }
 
   return (
-    <div className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end">
+    <div id="scroller" className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end">
       <div
-        ref={messagesContainerRef}
+      
         className="w-full flex flex-col overflow-x-hidden overflow-y-hidden min-h-full justify-end"
       >
         {messages.map((message, index) => (
@@ -60,10 +57,6 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                 duration: messages.indexOf(message) * 0.05 + 0.2,
               },
             }}
-            style={{
-              originX: 0.5,
-              originY: 0.5,
-            }}
             className={cn(
               "flex flex-col gap-2 p-4 whitespace-pre-wrap",
               message.role === "user" ? "items-end" : "items-start"
@@ -75,7 +68,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                   <span className="bg-accent p-3 rounded-md max-w-2xl">
                     {message.content}
                   </span>
-                  <Avatar className="flex justify-start items-center">
+                  <Avatar className="flex justify-start items-center overflow-hidden">
                     <AvatarImage
                       src="/user.jpg"
                       alt="AI"
@@ -97,7 +90,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                       className="object-contain dark:invert"
                     />
                   </Avatar>
-                  <span className="bg-accent p-3 rounded-md max-w-2xl">
+                  <span className="bg-accent p-3 rounded-md max-w-2xl overflow-x-auto">
                     {message.content}
                     {isLoading && messages.indexOf(message) === messages.length - 1 && (
                       <span className="animate-pulse" aria-label="Typing">
@@ -111,6 +104,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
           </motion.div>
         ))}
       </div>
+        <div id="anchor" ref={bottomRef}></div>
     </div>
   );
 }

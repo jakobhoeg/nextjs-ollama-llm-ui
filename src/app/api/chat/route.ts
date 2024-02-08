@@ -8,8 +8,8 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const model = new ChatOllama({
-    baseUrl: process.env.OLLAMA_BASE_URL,
-    model: "phi",
+    baseUrl: process.env.OLLAMA_URL,
+    model: "mistral",
   });
 
   const parser = new BytesOutputParser();
