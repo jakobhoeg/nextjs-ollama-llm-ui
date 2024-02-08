@@ -8,6 +8,9 @@ import { Message } from "ai/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import SidebarSkeleton from "./sidebar-skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import UserSettings from "./user-settings";
+import { useLocalStorageData } from "@/app/hooks/useLocalStorageData";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -18,7 +21,7 @@ interface SidebarProps {
 
 export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   const [localChats, setLocalChats] = useState<{ chatId: string; messages: Message[] }[]>([]);
-  const [isLoading , setIsLoading] = useState(false);
+  const localChatss = useLocalStorageData('chat_', []);
 
   useEffect(() => {
     setLocalChats(getLocalstorageChats());
@@ -32,7 +35,6 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   }, []);
 
   const getLocalstorageChats = (): { chatId: string; messages: Message[] }[] => {
-    setIsLoading(true);
     const chats = Object.keys(localStorage).filter((key) => key.startsWith("chat_"));
     // Map through the chats and return an object with chatId and messages
     const chatObjects = chats.map((chat) => {
@@ -47,7 +49,6 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
       return bDate.getTime() - aDate.getTime();
     });
       
-    setIsLoading(false);
     return chatObjects;
   }
   
@@ -61,9 +62,9 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className="relative group bg-accent/20 dark:bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
+      className="relative justify-between group bg-accent/20 dark:bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
     >
-          <div className="flex justify-between p-2 items-center">
+          <div className="flex flex-col justify-between p-2 ">
           <Button
           onClick={() => {
             window.location.replace("/");
@@ -85,10 +86,8 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
            </div>
             <SquarePen size={18} className="shrink-0" />
           </Button>
-      </div>
-
-
-        <div className="flex flex-col px-2 pt-2 gap-2">
+     
+          <div className="flex flex-col pt-10 gap-2">
           <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
           {localChats.length > 0 ? (
             <div>
@@ -122,7 +121,13 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
             <SidebarSkeleton />
           )}
         </div>
+     
+      </div>
 
+            <div className="justify-end px-2 pb-2 w-full ">
+              <UserSettings />
+
+            </div>
 
     </div>
   );

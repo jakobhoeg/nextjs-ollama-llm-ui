@@ -9,6 +9,8 @@ import Image from "next/image";
 
 export default function ChatList({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop }: ChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [name, setName] = React.useState<string>("");
+  const [localStorageIsLoading, setLocalStorageIsLoading] = React.useState(true);
 
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end"});
@@ -17,6 +19,14 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    const username = localStorage.getItem("ollama_user");
+    if (username) {
+      setName(username);
+      setLocalStorageIsLoading(false);
+    }
+  }, []);
 
   
   if (messages.length === 0) {
@@ -70,13 +80,15 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                   </span>
                   <Avatar className="flex justify-start items-center overflow-hidden">
                     <AvatarImage
-                      src="/user.jpg"
-                      alt="AI"
+                      src="/"
+                      alt="user"
                       width={6}
                       height={6}
                       className="object-contain"
                     />
-                    <AvatarFallback>{localStorage.getItem("ollama_username")?.substring(0,2)}</AvatarFallback>
+                    <AvatarFallback>
+                    {name && name.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
                   </Avatar>
                 </div>
               )}
