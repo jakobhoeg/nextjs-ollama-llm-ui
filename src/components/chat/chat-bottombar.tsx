@@ -98,7 +98,6 @@ export default function ChatBottombar({
               <StopIcon className="w-6 h-6  text-muted-foreground" />
             </Button>
               )}
-            
           </form>
         </motion.div>
       </AnimatePresence>

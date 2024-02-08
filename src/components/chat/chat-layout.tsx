@@ -32,6 +32,7 @@ export function ChatLayout({
   isLoading,
   error,
   stop,
+  setSelectedModel,
 }: MergedProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const [isMobile, setIsMobile] = useState(false);
@@ -100,6 +101,7 @@ export function ChatLayout({
         minSize={30}
       >
         <Chat 
+          setSelectedModel={setSelectedModel}
            messages={messages}
            input={input}
            handleInputChange={handleInputChange}
