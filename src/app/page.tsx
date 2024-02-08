@@ -35,10 +35,6 @@ export default function Home() {
   }, [messages, chatId, isLoading, error]);
 
   useEffect(() => {
-    if (localStorage.getItem("selectedModel")) {
-      setSelectedModel(localStorage.getItem("selectedModel") as string);
-    }
-
     if (!localStorage.getItem("ollama_user")) {
       setOpen(true);
     }

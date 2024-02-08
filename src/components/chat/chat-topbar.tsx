@@ -23,6 +23,7 @@ export default function ChatTopbar({ setSelectedModel, isLoading }: ChatTopbarPr
     const getLocalStorageModel = localStorage.getItem("selectedModel");
     if (getLocalStorageModel) {
       setCurrentModel(getLocalStorageModel);
+      setSelectedModel(getLocalStorageModel);
     }
 
     const fetchData = async () => {
