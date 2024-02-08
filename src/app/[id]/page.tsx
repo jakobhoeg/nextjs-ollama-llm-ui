@@ -68,7 +68,7 @@ export default function Page({ params }: { params: { id: string } }) {
         error={error}
         stop={stop}
         navCollapsedSize={10}
-        defaultLayout={[30, 70]}
+        defaultLayout={[30, 160]}
       />
     </main>
   );

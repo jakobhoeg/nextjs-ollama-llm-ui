@@ -84,8 +84,9 @@ export function ChatLayout({
           )}`;
         }}
         className={cn(
-          isCollapsed &&
+          isCollapsed ?
             "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
+            : "hidden md:block"
         )}
       >
         <Sidebar
@@ -94,7 +95,10 @@ export function ChatLayout({
           isMobile={isMobile}
         />
       </ResizablePanel>
-      <ResizableHandle withHandle />
+      <ResizableHandle className={cn(
+          "hidden md:block",
+      )}
+        withHandle />
       <ResizablePanel
         className="h-screen"
         defaultSize={defaultLayout[1]}

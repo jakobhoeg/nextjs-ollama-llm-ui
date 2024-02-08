@@ -1,6 +1,6 @@
 import { StreamingTextResponse, Message } from "ai";
 import { ChatOllama } from "@langchain/community/chat_models/ollama";
-import { AIMessage, HumanMessage } from "langchain/schema";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { BytesOutputParser } from "@langchain/core/output_parsers";
 
 

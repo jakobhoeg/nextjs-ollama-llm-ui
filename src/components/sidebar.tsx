@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { MoreHorizontal, SquarePen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Message } from "ai/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import SidebarSkeleton from "./sidebar-skeleton";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -17,11 +18,11 @@ interface SidebarProps {
 
 export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   const [localChats, setLocalChats] = useState<{ chatId: string; messages: Message[] }[]>([]);
+  const [isLoading , setIsLoading] = useState(false);
 
   useEffect(() => {
     setLocalChats(getLocalstorageChats());
     const handleStorageChange = () => {
-      console.log("Change to local storage!");
       setLocalChats(getLocalstorageChats());
     };
     window.addEventListener('storage', handleStorageChange);
@@ -31,6 +32,7 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
   }, []);
 
   const getLocalstorageChats = (): { chatId: string; messages: Message[] }[] => {
+    setIsLoading(true);
     const chats = Object.keys(localStorage).filter((key) => key.startsWith("chat_"));
     // Map through the chats and return an object with chatId and messages
     const chatObjects = chats.map((chat) => {
@@ -45,6 +47,7 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
       return bDate.getTime() - aDate.getTime();
     });
       
+    setIsLoading(false);
     return chatObjects;
   }
   
@@ -61,12 +64,12 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
       className="relative group bg-accent/20 dark:bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
     >
           <div className="flex justify-between p-2 items-center">
-          <Link
-            href="/"
-            className={cn(
-              buttonVariants({ variant: "ghost" }),
-              "flex justify-between w-full h-14 text-base font-normal items-center "
-            )}
+          <Button
+          onClick={() => {
+            window.location.replace("/");
+          }}
+            variant="ghost"
+            className="flex justify-between w-full h-14 text-base font-normal items-center "
           >
            <div className="flex gap-3 items-center">
            {!isCollapsed && !isMobile && (
@@ -81,13 +84,15 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
             New chat
            </div>
             <SquarePen size={18} className="shrink-0" />
-          </Link>
+          </Button>
       </div>
 
 
         <div className="flex flex-col px-2 pt-2 gap-2">
           <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
-          {localChats.map(({ chatId, messages }, index) => (
+          {localChats.length > 0 ? (
+            <div>
+              {localChats.map(({ chatId, messages }, index) => (
             <Link
             key={index}
             href={`/${chatId.substr(5)}`}
@@ -112,6 +117,10 @@ export function Sidebar({ messages, isCollapsed, isMobile }: SidebarProps) {
             } />
           </Link>
         ))}
+            </div>
+          ) : (
+            <SidebarSkeleton />
+          )}
         </div>
 
 
