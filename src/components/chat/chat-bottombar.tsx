@@ -72,7 +72,7 @@ export default function ChatBottombar({
               <Link
                 href="#"
                 className={cn(
-                  buttonVariants({ variant: "ghost", size: "icon" }),
+                  buttonVariants({ variant: "secondary", size: "icon" }),
                 )}
               >
                 <ImageIcon className="w-6 h-6 text-muted-foreground" />
@@ -90,11 +90,11 @@ export default function ChatBottombar({
               className="border-input max-h-20 px-5 py-4 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full border rounded-full flex items-center h-14 resize-none overflow-hidden dark:bg-card/35"
             />
               {!isLoading ? (
-                <Button variant="ghost" size="icon" type="submit" disabled={isLoading || !input.trim()}>
+                <Button className="shrink-0" variant="secondary" size="icon" type="submit" disabled={isLoading || !input.trim()}>
                 <PaperPlaneIcon className=" w-6 h-6 text-muted-foreground" />
               </Button>
               ) : (
-                <Button variant="ghost" size="icon" onClick={stop} >
+                <Button className="shrink-0" variant="secondary" size="icon" onClick={stop} >
               <StopIcon className="w-6 h-6  text-muted-foreground" />
             </Button>
               )}

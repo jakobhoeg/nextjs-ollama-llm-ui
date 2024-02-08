@@ -2,7 +2,7 @@ import { Message, useChat } from "ai/react";
 import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChatProps } from "./chat";
 import { ScrollArea } from "../ui/scroll-area";
 import Image from "next/image";
@@ -76,6 +76,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                       height={6}
                       className="object-contain"
                     />
+                    <AvatarFallback>{localStorage.getItem("ollama_username")?.substring(0,2)}</AvatarFallback>
                   </Avatar>
                 </div>
               )}
