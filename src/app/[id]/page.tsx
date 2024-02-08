@@ -57,7 +57,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [messages, chatId, isLoading, error]);
 
   return (
-    <main className="flex h-screen flex-col items-center">
+    <main className="flex h-[calc(100dvh)] flex-col items-center">
       <ChatLayout
         setSelectedModel={setSelectedModel}
         messages={messages}

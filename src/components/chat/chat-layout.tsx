@@ -63,7 +63,7 @@ export function ChatLayout({
           sizes
         )}`;
       }}
-      className="h-full items-stretch"
+      className="h-screen items-stretch"
     >
       <ResizablePanel
         defaultSize={defaultLayout[0]}
@@ -96,13 +96,12 @@ export function ChatLayout({
         />
       </ResizablePanel>
       <ResizableHandle className={cn(
-          "hidden md:block",
+          "hidden md:flex",
       )}
         withHandle />
       <ResizablePanel
-        className="h-screen"
+        className="h-full"
         defaultSize={defaultLayout[1]}
-        minSize={30}
       >
         <Chat 
           setSelectedModel={setSelectedModel}
