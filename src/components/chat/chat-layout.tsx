@@ -16,6 +16,7 @@ interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
   navCollapsedSize: number;
+  chatId: string;
 }
 
 type MergedProps = ChatLayoutProps & ChatProps;
@@ -32,6 +33,7 @@ export function ChatLayout({
   isLoading,
   error,
   stop,
+  chatId,
   setSelectedModel,
 }: MergedProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
@@ -93,6 +95,7 @@ export function ChatLayout({
           isCollapsed={isCollapsed || isMobile}
           messages={messages}
           isMobile={isMobile}
+          chatId={chatId}
         />
       </ResizablePanel>
       <ResizableHandle className={cn(

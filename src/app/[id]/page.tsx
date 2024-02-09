@@ -59,6 +59,7 @@ export default function Page({ params }: { params: { id: string } }) {
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center">
       <ChatLayout
+        chatId={params.id}
         setSelectedModel={setSelectedModel}
         messages={messages}
         input={input}
