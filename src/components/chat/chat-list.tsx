@@ -2,38 +2,63 @@ import { Message, useChat } from "ai/react";
 import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChatProps } from "./chat";
 import { ScrollArea } from "../ui/scroll-area";
+import Image from "next/image";
 
 export default function ChatList({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop }: ChatProps) {
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const [name, setName] = React.useState<string>("");
+  const [localStorageIsLoading, setLocalStorageIsLoading] = React.useState(true);
 
   const scrollToBottom = () => {
-    const lastMessage = messagesContainerRef.current?.lastElementChild as HTMLElement;
-    if (lastMessage) {
-      lastMessage.scrollIntoView({ behavior: "smooth", block: "end"});
-    }
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end"});
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const username = localStorage.getItem("ollama_user");
+    if (username) {
+      setName(username);
+      setLocalStorageIsLoading(false);
+    }
+  }, []);
+
+  
+  if (messages.length === 0) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <div className="flex flex-col gap-4 items-center">
+            <Image
+              src="/ollama.png"
+              alt="AI"
+              width={60}
+              height={60}
+              className="h-20 w-14 object-contain dark:invert"
+            />
+          <p className="text-center text-lg text-muted-foreground">How can I help you today?</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end">
+    <div id="scroller" className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end">
       <div
-        ref={messagesContainerRef}
+      
         className="w-full flex flex-col overflow-x-hidden overflow-y-hidden min-h-full justify-end"
       >
         {messages.map((message, index) => (
           <motion.div
             key={index}
-            layout="position"
-            initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
+            layout
+            initial={{ opacity: 0, scale: 1, y: 20, x: 0 }}
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, scale: 1, y: 50, x: 0 }}
+            exit={{ opacity: 0, scale: 1, y: 20, x: 0 }}
             transition={{
               opacity: { duration: 0.1 },
               layout: {
@@ -41,10 +66,6 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                 bounce: 0.3,
                 duration: messages.indexOf(message) * 0.05 + 0.2,
               },
-            }}
-            style={{
-              originX: 0.5,
-              originY: 0.5,
             }}
             className={cn(
               "flex flex-col gap-2 p-4 whitespace-pre-wrap",
@@ -57,14 +78,17 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                   <span className="bg-accent p-3 rounded-md max-w-2xl">
                     {message.content}
                   </span>
-                  <Avatar className="flex justify-start items-center">
+                  <Avatar className="flex justify-start items-center overflow-hidden">
                     <AvatarImage
-                      src="/user.jpg"
-                      alt="AI"
+                      src="/"
+                      alt="user"
                       width={6}
                       height={6}
                       className="object-contain"
                     />
+                    <AvatarFallback>
+                    {name && name.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
                   </Avatar>
                 </div>
               )}
@@ -76,10 +100,10 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                       alt="AI"
                       width={6}
                       height={6}
-                      className="object-contain invert"
+                      className="object-contain dark:invert"
                     />
                   </Avatar>
-                  <span className="bg-accent p-3 rounded-md max-w-2xl">
+                  <span className="bg-accent p-3 rounded-md max-w-2xl overflow-x-auto">
                     {message.content}
                     {isLoading && messages.indexOf(message) === messages.length - 1 && (
                       <span className="animate-pulse" aria-label="Typing">
@@ -93,6 +117,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
           </motion.div>
         ))}
       </div>
+        <div id="anchor" ref={bottomRef}></div>
     </div>
   );
 }

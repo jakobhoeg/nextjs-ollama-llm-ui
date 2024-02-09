@@ -9,7 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Sidebar } from "../sidebar";
 import { useChat } from "ai/react";
-import Chat from "./chat";
+import Chat, { ChatProps } from "./chat";
 import ChatList from "./chat-list";
 
 interface ChatLayoutProps {
@@ -18,18 +18,29 @@ interface ChatLayoutProps {
   navCollapsedSize: number;
 }
 
+type MergedProps = ChatLayoutProps & ChatProps;
+
+
 export function ChatLayout({
-  defaultLayout = [320, 480],
+  defaultLayout = [30, 160],
   defaultCollapsed = false,
   navCollapsedSize,
-}: ChatLayoutProps) {
+  messages,
+  input,
+  handleInputChange,
+  handleSubmit,
+  isLoading,
+  error,
+  stop,
+  setSelectedModel,
+}: MergedProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const [isMobile, setIsMobile] = useState(false);
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
 
+  
   useEffect(() => {
     const checkScreenWidth = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 900);
     };
 
     // Initial check
@@ -52,14 +63,14 @@ export function ChatLayout({
           sizes
         )}`;
       }}
-      className="h-full items-stretch"
+      className="h-screen items-stretch"
     >
       <ResizablePanel
         defaultSize={defaultLayout[0]}
         collapsedSize={navCollapsedSize}
-        // collapsible={true}
-        minSize={isMobile ? 0 : 15}
-        maxSize={isMobile ? 8 : 24}
+        collapsible={true}
+        minSize={isMobile ? 0 : 12}
+        maxSize={isMobile ? 0 : 16}
         onCollapse={() => {
           setIsCollapsed(true);
           document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
@@ -73,8 +84,9 @@ export function ChatLayout({
           )}`;
         }}
         className={cn(
-          isCollapsed &&
+          isCollapsed ?
             "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
+            : "hidden md:block"
         )}
       >
         <Sidebar
@@ -83,13 +95,24 @@ export function ChatLayout({
           isMobile={isMobile}
         />
       </ResizablePanel>
-      <ResizableHandle withHandle />
+      <ResizableHandle className={cn(
+          "hidden md:flex",
+      )}
+        withHandle />
       <ResizablePanel
-        className="h-screen"
+        className="h-full"
         defaultSize={defaultLayout[1]}
-        minSize={30}
       >
-        <Chat />
+        <Chat 
+          setSelectedModel={setSelectedModel}
+           messages={messages}
+           input={input}
+           handleInputChange={handleInputChange}
+           handleSubmit={handleSubmit}
+           isLoading={isLoading}
+           error={error}
+           stop={stop}
+        />
       </ResizablePanel>
     </ResizablePanelGroup>
   );

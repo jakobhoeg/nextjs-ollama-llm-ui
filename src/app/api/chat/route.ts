@@ -1,15 +1,15 @@
 import { StreamingTextResponse, Message } from "ai";
-import { ChatOllama } from "langchain/chat_models/ollama";
-import { AIMessage, HumanMessage } from "langchain/schema";
-import { BytesOutputParser } from "langchain/schema/output_parser";
+import { ChatOllama } from "@langchain/community/chat_models/ollama";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import { BytesOutputParser } from "@langchain/core/output_parsers";
 
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, selectedModel } = await req.json();
 
   const model = new ChatOllama({
-    baseUrl: process.env.OLLAMA_BASE_URL,
-    model: "phi",
+    baseUrl: process.env.OLLAMA_URL,
+    model: selectedModel,
   });
 
   const parser = new BytesOutputParser();

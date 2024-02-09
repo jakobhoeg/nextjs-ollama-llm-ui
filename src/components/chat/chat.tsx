@@ -4,8 +4,10 @@ import ChatList from './chat-list'
 import ChatBottombar from './chat-bottombar'
 import { Message, useChat } from 'ai/react';
 import { ChatRequestOptions } from 'ai';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ChatProps {
+  setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
   messages: Message[];
   input: string;
   handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -15,15 +17,14 @@ export interface ChatProps {
   stop: () => void;
   }
 
-export default function Chat() {
-
-const { messages, input, handleInputChange, handleSubmit, isLoading, error, stop  } = useChat();
+export default function ({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop, setSelectedModel }: ChatProps) {
 
   return (
     <div className="flex flex-col justify-between w-full h-full  ">
-        <ChatTopbar />
+        <ChatTopbar setSelectedModel={setSelectedModel} isLoading={isLoading}/>
 
         <ChatList  
+        setSelectedModel={setSelectedModel}
           messages={messages}
           input={input}
           handleInputChange={handleInputChange}
@@ -34,6 +35,7 @@ const { messages, input, handleInputChange, handleSubmit, isLoading, error, stop
         />
 
         <ChatBottombar 
+          setSelectedModel={setSelectedModel}
           messages={messages}
           input={input}
           handleInputChange={handleInputChange}

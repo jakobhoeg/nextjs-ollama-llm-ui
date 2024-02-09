@@ -58,3 +58,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+#scroller * {
+  overflow-anchor: none;
+}
+
+#anchor {
+  overflow-anchor: auto;
+  height: 1px;
+}
