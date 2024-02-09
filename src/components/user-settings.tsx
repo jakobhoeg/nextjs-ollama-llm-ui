@@ -21,46 +21,47 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { GearIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import { ModeToggle } from "./mode-toggle";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import { set } from "zod";
+import UsernameForm from "./username-form";
+import EditUsernameForm from "./edit-username-form";
 
 export default function UserSettings() {
-    const [name, setName] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        const handleStorageChange = () => {
-          const username = localStorage.getItem("ollama_user");
-          if (username) {
-            setName(username);
-            setIsLoading(false);
-          }
-        };
-      
-        const fetchData = () => {
-          const username = localStorage.getItem("ollama_user");
-          if (username) {
-            setName(username);
-            setIsLoading(false);
-          }
-        };
-      
-        // Initial fetch
-        fetchData();
-      
-        // Listen for storage changes
-        window.addEventListener('storage', handleStorageChange);
-      
-        return () => {
-          window.removeEventListener('storage', handleStorageChange);
-        };
-      }, []);
-        
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const username = localStorage.getItem("ollama_user");
+      if (username) {
+        setName(username);
+        setIsLoading(false);
+      }
+    };
+
+    const fetchData = () => {
+      const username = localStorage.getItem("ollama_user");
+      if (username) {
+        setName(username);
+        setIsLoading(false);
+      }
+    };
+
+    // Initial fetch
+    fetchData();
+
+    // Listen for storage changes
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -79,38 +80,31 @@ export default function UserSettings() {
                 {name && name.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="text-xs">
-            {isLoading ? (
+            <div className="text-xs truncate">
+              {isLoading ? (
                 <Skeleton className="w-20 h-4" />
-            ) : (
+              ) : (
                 name || "Anonymous"
-            )}
+              )}
             </div>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full">
-          <DropdownMenuItem className="text-xs">
+        <DropdownMenuContent className="w-48">
+          <DropdownMenuLabel>Hello, {name.split(" ")[0]}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
             <DialogTrigger asChild>
-              <div
-                className="flex w-full gap-2 items-center cursor-pointer"
-              >
-                <GearIcon className="w-4 h-4" />
+              <div className="flex w-full gap-2 items-center cursor-pointer">
+                <GearIcon className="w-5 h-5" />
                 Settings
               </div>
             </DialogTrigger>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ModeToggle />
-          </DropdownMenuItem>
         </DropdownMenuContent>
-
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
-            <DialogDescription>
-              Do you want to delete the entry? Deleting this entry cannot be
-              undone.
-            </DialogDescription>
+          <DialogHeader className="space-y-4">
+            <DialogTitle>Settings</DialogTitle>
+            <EditUsernameForm setOpen={setOpen} />
           </DialogHeader>
         </DialogContent>
       </DropdownMenu>

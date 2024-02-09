@@ -37,6 +37,7 @@
     "react-hook-form": "^7.50.1",
     "react-resizable-panels": "^2.0.3",
     "react-textarea-autosize": "^8.5.3",
+    "sonner": "^1.4.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",
