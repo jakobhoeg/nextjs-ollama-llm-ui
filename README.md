@@ -1,7 +1,7 @@
 
 
 <h1 align="center">
-  Fully-featured, beautiful web user interface for Ollama LLMs
+  Fully-featured, beautiful web interface for Ollama LLMs
 </h1>
 
 Get up and running with Large Language Models quickly and **locally**.
