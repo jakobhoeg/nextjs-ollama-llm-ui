@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
 import {
@@ -29,7 +30,7 @@ export default function PullModel() {
         </div>
       </DialogTrigger>
       <DialogContent className="space-y-2">
-        <DialogHeader>Pull model</DialogHeader>
+      <DialogTitle>Pull Model</DialogTitle>
           <PullModelForm />
       </DialogContent>
     </Dialog>

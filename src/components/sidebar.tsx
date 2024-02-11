@@ -22,15 +22,20 @@ interface SidebarProps {
   chatId: string;
 }
 
-export function Sidebar({ messages, isCollapsed, isMobile, chatId }: SidebarProps) {
+export function Sidebar({
+  messages,
+  isCollapsed,
+  isMobile,
+  chatId,
+}: SidebarProps) {
   const [localChats, setLocalChats] = useState<
     { chatId: string; messages: Message[] }[]
   >([]);
   const localChatss = useLocalStorageData("chat_", []);
   const [selectedChatId, setSselectedChatId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-
     if (chatId) {
       setSselectedChatId(chatId);
     }
@@ -52,6 +57,11 @@ export function Sidebar({ messages, isCollapsed, isMobile, chatId }: SidebarProp
     const chats = Object.keys(localStorage).filter((key) =>
       key.startsWith("chat_")
     );
+
+    if (chats.length === 0) {
+      setIsLoading(false);
+    }
+
     // Map through the chats and return an object with chatId and messages
     const chatObjects = chats.map((chat) => {
       const item = localStorage.getItem(chat);
@@ -67,6 +77,7 @@ export function Sidebar({ messages, isCollapsed, isMobile, chatId }: SidebarProp
       return bDate.getTime() - aDate.getTime();
     });
 
+    setIsLoading(false);
     return chatObjects;
   };
 
@@ -105,7 +116,7 @@ export function Sidebar({ messages, isCollapsed, isMobile, chatId }: SidebarProp
 
         <div className="flex flex-col pt-10 gap-2">
           <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
-          {localChats.length > 0 ? (
+          {localChats.length > 0 && (
             <div>
               {localChats.map(({ chatId, messages }, index) => (
                 <Link
@@ -113,8 +124,10 @@ export function Sidebar({ messages, isCollapsed, isMobile, chatId }: SidebarProp
                   href={`/${chatId.substr(5)}`}
                   className={cn(
                     {
-                      [buttonVariants({ variant: "secondaryLink" })]: (chatId.substring(5)) === selectedChatId,
-                      [buttonVariants({ variant: "ghost" })]: (chatId.substring(5)) !== selectedChatId,
+                      [buttonVariants({ variant: "secondaryLink" })]:
+                        chatId.substring(5) === selectedChatId,
+                      [buttonVariants({ variant: "ghost" })]:
+                        chatId.substring(5) !== selectedChatId,
                     },
                     "flex justify-between w-full h-14 text-base font-normal items-center "
                   )}
@@ -138,9 +151,8 @@ export function Sidebar({ messages, isCollapsed, isMobile, chatId }: SidebarProp
                 </Link>
               ))}
             </div>
-          ) : (
-            <SidebarSkeleton />
           )}
+          {isLoading && <SidebarSkeleton />}
         </div>
       </div>
 
