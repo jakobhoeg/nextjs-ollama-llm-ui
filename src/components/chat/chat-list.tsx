@@ -5,14 +5,24 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChatProps } from "./chat";
 import Image from "next/image";
+import CodeDisplayBlock from "../code-display-block";
 
-export default function ChatList({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop }: ChatProps) {
+export default function ChatList({
+  messages,
+  input,
+  handleInputChange,
+  handleSubmit,
+  isLoading,
+  error,
+  stop,
+}: ChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [name, setName] = React.useState<string>("");
-  const [localStorageIsLoading, setLocalStorageIsLoading] = React.useState(true);
+  const [localStorageIsLoading, setLocalStorageIsLoading] =
+    React.useState(true);
 
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end"});
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   };
 
   useEffect(() => {
@@ -27,30 +37,31 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
     }
   }, []);
 
-  
   if (messages.length === 0) {
     return (
       <div className="w-full h-full flex justify-center items-center">
         <div className="flex flex-col gap-4 items-center">
-            <Image
-              src="/ollama.png"
-              alt="AI"
-              width={60}
-              height={60}
-              className="h-20 w-14 object-contain dark:invert"
-            />
-          <p className="text-center text-lg text-muted-foreground">How can I help you today?</p>
+          <Image
+            src="/ollama.png"
+            alt="AI"
+            width={60}
+            height={60}
+            className="h-20 w-14 object-contain dark:invert"
+          />
+          <p className="text-center text-lg text-muted-foreground">
+            How can I help you today?
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div id="scroller" className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end">
-      <div
-      
-        className="w-full flex flex-col overflow-x-hidden overflow-y-hidden min-h-full justify-end"
-      >
+    <div
+      id="scroller"
+      className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end"
+    >
+      <div className="w-full flex flex-col overflow-x-hidden overflow-y-hidden min-h-full justify-end">
         {messages.map((message, index) => (
           <motion.div
             key={index}
@@ -86,8 +97,8 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                       className="object-contain"
                     />
                     <AvatarFallback>
-                    {name && name.substring(0, 2).toUpperCase()}
-                  </AvatarFallback>
+                      {name && name.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
                 </div>
               )}
@@ -103,12 +114,26 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
                     />
                   </Avatar>
                   <span className="bg-accent p-3 rounded-md max-w-2xl overflow-x-auto">
-                    {message.content}
-                    {isLoading && messages.indexOf(message) === messages.length - 1 && (
-                      <span className="animate-pulse" aria-label="Typing">
-                        ...
-                      </span>
-                    )}
+                    {/* Check if the message content contains a code block */}
+                    {message.content.split("```").map((part, index) => {
+                      if (index % 2 === 0) {
+                        return (
+                          <React.Fragment key={index}>{part}</React.Fragment>
+                        );
+                      } else {
+                        return (
+                          <pre className="whitespace-pre-wrap" key={index}>
+                            <CodeDisplayBlock code={part} lang="" />
+                          </pre>
+                        );
+                      }
+                    })}
+                    {isLoading &&
+                      messages.indexOf(message) === messages.length - 1 && (
+                        <span className="animate-pulse" aria-label="Typing">
+                          ...
+                        </span>
+                      )}
                   </span>
                 </div>
               )}
@@ -116,7 +141,7 @@ export default function ChatList({ messages, input, handleInputChange, handleSub
           </motion.div>
         ))}
       </div>
-        <div id="anchor" ref={bottomRef}></div>
+      <div id="anchor" ref={bottomRef}></div>
     </div>
   );
 }
