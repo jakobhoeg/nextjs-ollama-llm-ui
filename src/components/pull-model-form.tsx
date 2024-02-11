@@ -117,6 +117,7 @@ export default function PullModelForm() {
               <Input
                 {...field}
                 type="text"
+                placeholder="llama2"
                 value={name}
                 onChange={(e) => handleChange(e)}
               />
