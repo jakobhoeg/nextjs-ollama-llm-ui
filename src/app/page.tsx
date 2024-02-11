@@ -69,6 +69,7 @@ export default function Home() {
     <main className="flex h-[calc(100dvh)] flex-col items-center ">
         <Dialog open={open} onOpenChange={setOpen} >
       <ChatLayout
+        chatId=""
         setSelectedModel={setSelectedModel}
         messages={messages}
         input={input}
