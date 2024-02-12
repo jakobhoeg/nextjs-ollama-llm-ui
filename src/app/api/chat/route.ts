@@ -26,12 +26,5 @@ export async function POST(req: Request) {
 
     console.log(stream);
 
-  return new StreamingTextResponse(stream), {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    }
-  };
-  
+  return new StreamingTextResponse(stream);
 }

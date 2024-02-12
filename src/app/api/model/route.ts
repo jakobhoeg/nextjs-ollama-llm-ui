@@ -4,11 +4,6 @@ export async function POST(req: Request) {
     const response = await fetch(process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/pull", {
         method: "POST",
         body: JSON.stringify({ name }),
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          }
     });
 
     // Create a new ReadableStream from the response body
