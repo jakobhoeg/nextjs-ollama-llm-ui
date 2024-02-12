@@ -54,7 +54,7 @@ export default function UsernameForm({ setOpen }: UsernameFormProps) {
                 <Input placeholder="Enter your name" {...field} />
               </FormControl>
               <FormDescription>
-                This won't be public. It's just for you.
+                This won&apos;t be public. It&apos;s just for you.
               </FormDescription>
               <FormMessage />
             </FormItem>

@@ -18,7 +18,7 @@ export interface ChatProps {
   stop: () => void;
   }
 
-export default function ({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop, setSelectedModel, chatId }: ChatProps) {
+export default function Chat ({ messages, input, handleInputChange, handleSubmit, isLoading, error, stop, setSelectedModel, chatId }: ChatProps) {
 
   return (
     <div className="flex flex-col justify-between w-full h-full  ">
