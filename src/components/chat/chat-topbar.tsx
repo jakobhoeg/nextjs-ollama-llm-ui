@@ -47,7 +47,15 @@ export default function ChatTopbar({
     const fetchData = async () => {
       try {
         const res = await fetch(
-          process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/tags"
+          process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/tags",
+          {
+            method: "GET",
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+              'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            },
+          }
         );
         const data = await res.json();
         // Extract the "name" field from each model object and store them in the state
