@@ -14,8 +14,8 @@ This project aims to be the easiest way for you to get started with LLMs. No ted
 - **Fully responsive:** Use your phone to chat, with the same ease as on desktop.
 - **Easy setup:** No tedious and annoying setup required. Just clone the repo and you're good to go!
 - **Code syntax highligting:** Messages including code, will be highlighted for easy access.
-- **Copy code easily:** Easily copy the highlighted code with one click.
-- **Download & Delete models:** Easily download and delete models directly from the interface.
+- **Copy codeblocks easily:** Easily copy the highlighted code with one click.
+- **Download/Pull & Delete models:** Easily download and delete models directly from the interface.
 - **Switch between models:** Switch between models fast with a click.
 - **Chat history:** Chats are saved and easily accessed.
 - **Light & Dark mode:** Switch between light & dark mode.
@@ -56,7 +56,13 @@ npm run dev
 
 **5. Go to [localhost:3000](http://localhost:3000) and start chatting with your favourite model!**
 
+# Upcoming features
 
-
+This is a to-do list consisting of upcoming features.
+- ⬜️ Ability to send an image in the prompt to utilize vision language models.
+- ⬜️ Ability to regenerate responses
+- ⬜️ Import and export chats
+- ⬜️ Voice input support
+- ✅ Code syntax highlighting
 
 
