@@ -103,7 +103,7 @@ export function Sidebar({
   return (
     <div
       data-collapsed={isCollapsed}
-      className="relative justify-between group bg-accent/20 dark:bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
+      className="relative justify-between group lg:bg-accent/20 lg:dark:bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
     >
       <div className=" flex flex-col justify-between p-2 max-h-fit overflow-y-auto">
         <Button
@@ -111,21 +111,21 @@ export function Sidebar({
             window.location.replace("/");
           }}
           variant="ghost"
-          className="flex justify-between w-full h-14 text-lg font-normal items-center "
+          className="flex justify-between w-full h-14 text-sm xl:text-lg font-normal items-center "
         >
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-center ">
             {!isCollapsed && !isMobile && (
               <Image
                 src="/ollama.png"
                 alt="AI"
                 width={28}
                 height={28}
-                className="dark:invert hidden xl:block"
+                className="dark:invert hidden 2xl:block"
               />
             )}
             New chat
           </div>
-          <SquarePen size={18} className="shrink-0" />
+          <SquarePen size={18} className="shrink-0 w-4 h-4" />
         </Button>
 
         <div className="flex flex-col pt-10 gap-2">
@@ -177,12 +177,11 @@ export function Sidebar({
                           <DialogHeader className="space-y-4">
                             <DialogTitle>Delete chat?</DialogTitle>
                             <DialogDescription>
-                              Are you sure you want to delete this chat? This action cannot be undone.
+                              Are you sure you want to delete this chat? This
+                              action cannot be undone.
                             </DialogDescription>
                             <div className="flex justify-end gap-2">
-                            <Button variant="outline">
-                                Cancel
-                              </Button>
+                              <Button variant="outline">Cancel</Button>
                               <Button
                                 variant="destructive"
                                 onClick={() => handleDeleteChat(chatId)}

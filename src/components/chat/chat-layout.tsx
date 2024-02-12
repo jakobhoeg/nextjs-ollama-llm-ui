@@ -11,6 +11,7 @@ import { Sidebar } from "../sidebar";
 import { useChat } from "ai/react";
 import Chat, { ChatProps } from "./chat";
 import ChatList from "./chat-list";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
@@ -42,7 +43,7 @@ export function ChatLayout({
   
   useEffect(() => {
     const checkScreenWidth = () => {
-      setIsMobile(window.innerWidth <= 900);
+      setIsMobile(window.innerWidth <= 1023);
     };
 
     // Initial check
@@ -107,6 +108,7 @@ export function ChatLayout({
         defaultSize={defaultLayout[1]}
       >
         <Chat 
+        chatId={chatId}
           setSelectedModel={setSelectedModel}
            messages={messages}
            input={input}

@@ -85,7 +85,7 @@ export default function ChatList({
             <div className="flex gap-3 items-center">
               {message.role === "user" && (
                 <div className="flex items-end gap-3">
-                  <span className="bg-accent p-3 rounded-md max-w-2xl">
+                  <span className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
                     {message.content}
                   </span>
                   <Avatar className="flex justify-start items-center overflow-hidden">
@@ -113,7 +113,7 @@ export default function ChatList({
                       className="object-contain dark:invert"
                     />
                   </Avatar>
-                  <span className="bg-accent p-3 rounded-md max-w-2xl overflow-x-auto">
+                  <span className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
                     {/* Check if the message content contains a code block */}
                     {message.content.split("```").map((part, index) => {
                       if (index % 2 === 0) {

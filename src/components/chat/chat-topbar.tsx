@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useEffect } from "react";
 import {
@@ -6,15 +6,33 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
 import { Button } from "../ui/button";
-import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { Sidebar } from "../sidebar";
+import { Message } from "ai/react";
 
 interface ChatTopbarProps {
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
+  chatId?: string;
+  messages: Message[];
 }
 
-export default function ChatTopbar({ setSelectedModel, isLoading }: ChatTopbarProps) {
+export default function ChatTopbar({
+  setSelectedModel,
+  isLoading,
+  chatId,
+  messages,
+}: ChatTopbarProps) {
   const [models, setModels] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [currentModel, setCurrentModel] = React.useState<string | null>(null);
@@ -35,18 +53,17 @@ export default function ChatTopbar({ setSelectedModel, isLoading }: ChatTopbarPr
         // Extract the "name" field from each model object and store them in the state
         const modelNames = data.models.map((model: any) => model.name);
         setModels(modelNames);
-        
+
         if (!localStorage.getItem("selectedModel")) {
-            // save the first model in the list as selectedModel in localstorage
+          // save the first model in the list as selectedModel in localstorage
           setCurrentModel(modelNames[0]);
           setSelectedModel(modelNames[0]);
 
           localStorage.setItem("selectedModel", modelNames[0]);
         }
-
       } catch (error) {
         console.error("Error fetching models:", error);
-        setCurrentModel("Select model")
+        setCurrentModel("Select model");
         setModels([]);
       }
     };
@@ -61,11 +78,25 @@ export default function ChatTopbar({ setSelectedModel, isLoading }: ChatTopbarPr
   };
 
   return (
-    <div className="w-full flex px-4 py-6  items-center justify-center ">
+    <div className="w-full flex px-4 py-6  items-center justify-between lg:justify-center ">
+      <Sheet>
+        <SheetTrigger>
+          <HamburgerMenuIcon className="lg:hidden w-5 h-5" />
+        </SheetTrigger>
+        <SheetContent side="left">
+          <Sidebar
+            chatId={chatId || ""}
+            isCollapsed={false}
+            isMobile={false}
+            messages={messages}
+          />
+        </SheetContent>
+      </Sheet>
+
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-          disabled={isLoading}
+            disabled={isLoading}
             variant="outline"
             role="combobox"
             aria-expanded={open}
@@ -76,7 +107,8 @@ export default function ChatTopbar({ setSelectedModel, isLoading }: ChatTopbarPr
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[170px] p-1">
-          {models.length > 0 ? (models.map((model) => (
+          {models.length > 0 ? (
+            models.map((model) => (
               <Button
                 key={model}
                 variant="ghost"
@@ -87,9 +119,12 @@ export default function ChatTopbar({ setSelectedModel, isLoading }: ChatTopbarPr
               >
                 {model}
               </Button>
-            ))) : (
-              <Button variant="ghost" disabled className=" w-full">No models available</Button>
-            )}
+            ))
+          ) : (
+            <Button variant="ghost" disabled className=" w-full">
+              No models available
+            </Button>
+          )}
         </PopoverContent>
       </Popover>
     </div>
