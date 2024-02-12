@@ -15,7 +15,7 @@ This project aims to be the easiest way for you to get started with LLMs. No ted
 - **Fully local:** Stores chats in localstorage for convenience. No need to run a database.
 - **Fully responsive:** Use your phone to chat, with the same ease as on desktop.
 - **Easy setup:** No tedious and annoying setup required. Just clone the repo and you're good to go!
-- **Code syntax highligting:** Messages including code, will be highlighted for easy access.
+- **Code syntax highligting:** Messages that include code, will be highlighted for easy access.
 - **Copy codeblocks easily:** Easily copy the highlighted code with one click.
 - **Download/Pull & Delete models:** Easily download and delete models directly from the interface.
 - **Switch between models:** Switch between models fast with a click.
