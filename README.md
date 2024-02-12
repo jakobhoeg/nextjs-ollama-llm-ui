@@ -24,7 +24,7 @@ This project aims to be the easiest way for you to get started with LLMs. No ted
 
 To use the web interface, these requisites must be met:
 
-1. Download [Ollama](https://ollama.com/download) and start it with ```ollama serve```. Or run it in a Docker container. Check the [Docs](https://github.com/ollama/ollama) for instructions.
+1. Download [Ollama](https://ollama.com/download) and start it with ```ollama serve```. Or run it in a Docker container. Check the [docs](https://github.com/ollama/ollama) for instructions.
 
 # Installation 📖
 
@@ -41,14 +41,26 @@ git clone https://github.com/jakobhoeg/nextjs-ollama-llm-ui
 ```
 cd nextjs-ollama-llm-ui
 ```
+
+**3. Rename the `.example.env` to `.env`:**
+
+```
+mv .example.env .env
+```
+
+**4. If your instance of Ollama is NOT running on the default ip-address and port, change the variable in the .env file to fit your usecase:**
+
+```
+NEXT_PUBLIC_OLLAMA_URL="http://localhost:11434"
+```
    
-**3. Install dependencies:**
+**5. Install dependencies:**
 
 ```
 npm install
 ```
 
-**4. Start the development server:**
+**6. Start the development server:**
 
 ```
 npm run dev
@@ -64,5 +76,21 @@ This is a to-do list consisting of upcoming features.
 - ⬜️ Import and export chats
 - ⬜️ Voice input support
 - ✅ Code syntax highlighting
+
+# Tech stack
+
+[NextJS](https://nextjs.org/) - React Framework for the Web
+
+[TailwindCSS](https://tailwindcss.com/) - Utility-first CSS framework
+
+[shadcn-ui](https://ui.shadcn.com/) - UI component built using Radix UI and Tailwind CSS
+
+[shadcn-chat](https://github.com/jakobhoeg/shadcn-chat) - Chat components for NextJS/React projects
+
+[Framer Motion](https://www.framer.com/motion/) - Motion/animation library for React
+
+[Lucide Icons](https://lucide.dev/) - Icon library
+
+
 
 
