@@ -1,4 +1,6 @@
-
+<div align="center">
+  <img src="ollama-nextjs-ui.gif">
+</div>
 
 <h1 align="center">
   Fully-featured & beautiful web interface for Ollama LLMs
@@ -19,6 +21,10 @@ This project aims to be the easiest way for you to get started with LLMs. No ted
 - **Switch between models:** Switch between models fast with a click.
 - **Chat history:** Chats are saved and easily accessed.
 - **Light & Dark mode:** Switch between light & dark mode.
+
+# Preview
+
+https://github.com/jakobhoeg/nextjs-ollama-llm-ui/assets/114422072/08eaed4f-9deb-4e1b-b87a-ba17d81b9a02
 
 # Requisites ⚙️
 
