@@ -31,6 +31,7 @@ https://github.com/jakobhoeg/nextjs-ollama-llm-ui/assets/114422072/08eaed4f-9deb
 To use the web interface, these requisites must be met:
 
 1. Download [Ollama](https://ollama.com/download) and start it with ```ollama serve```. Or run it in a Docker container. Check the [docs](https://github.com/ollama/ollama) for instructions.
+2. Node.js (18+) and npm is required. [Download](https://nodejs.org/en/download)
 
 # Installation 📖
 
