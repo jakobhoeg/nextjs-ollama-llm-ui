@@ -6,7 +6,7 @@
   Fully-featured & beautiful web interface for Ollama LLMs
 </h1>
 
-Get up and running with Large Language Models **quickly** and **locally**.
+Get up and running with Large Language Models **quickly**, **locally** and even **offline**.
 This project aims to be the easiest way for you to get started with LLMs. No tedious and annoying setup required!
 
 # Features ✨
@@ -97,7 +97,6 @@ This is a to-do list consisting of upcoming features.
 [Framer Motion](https://www.framer.com/motion/) - Motion/animation library for React
 
 [Lucide Icons](https://lucide.dev/) - Icon library
-
 
 
 
