@@ -38,7 +38,7 @@ To use the web interface, these requisites must be met:
 To install and run a local environment of the web interface, follow the instructions below.
 
 **1. Clone the repository to a directory on your pc via command prompt:**
-   
+
 ```
 git clone https://github.com/jakobhoeg/nextjs-ollama-llm-ui
 ```
@@ -58,9 +58,9 @@ mv .example.env .env
 **4. If your instance of Ollama is NOT running on the default ip-address and port, change the variable in the .env file to fit your usecase:**
 
 ```
-NEXT_PUBLIC_OLLAMA_URL="http://localhost:11434"
+OLLAMA_URL="http://localhost:11434"
 ```
-   
+
 **5. Install dependencies:**
 
 ```
@@ -97,6 +97,3 @@ This is a to-do list consisting of upcoming features.
 [Framer Motion](https://www.framer.com/motion/) - Motion/animation library for React
 
 [Lucide Icons](https://lucide.dev/) - Icon library
-
-
-

@@ -1,7 +1,7 @@
 export async function POST(req: Request) {
     const { name } = await req.json();
-    
-    const response = await fetch(process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/pull", {
+
+    const response = await fetch(process.env.OLLAMA_URL + "/api/pull", {
         method: "POST",
         body: JSON.stringify({ name }),
     });
