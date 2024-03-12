@@ -6,6 +6,13 @@
   Fully-featured & beautiful web interface for Ollama LLMs
 </h1>
 
+<div align="center">
+  
+![GitHub Repo stars](https://img.shields.io/github/stars/jakobhoeg/nextjs-ollama-llm-ui)
+  
+</div>
+
+
 Get up and running with Large Language Models **quickly**, **locally** and even **offline**.
 This project aims to be the easiest way for you to get started with LLMs. No tedious and annoying setup required!
 
