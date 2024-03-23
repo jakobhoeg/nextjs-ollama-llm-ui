@@ -40,7 +40,7 @@ export default function PullModelForm() {
     if (env === "production") {
       // Make a post request to localhost
       const pullModel = async () => {
-        const response = await fetch("http://localhost:11434/api/pull", {
+        const response = await fetch(process.env.OLLAMA_URL + "/api/pull", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

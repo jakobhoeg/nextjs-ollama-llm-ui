@@ -32,7 +32,7 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     if (env === "production") {
       const newOllama = new ChatOllama({
-        baseUrl: "http://localhost:11434",
+        baseUrl: process.env.OLLAMA_URL || "http://localhost:11434",
         model: selectedModel,
       });
       setOllama(newOllama);
