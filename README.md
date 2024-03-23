@@ -65,7 +65,7 @@ mv .example.env .env
 **4. If your instance of Ollama is NOT running on the default ip-address and port, change the variable in the .env file to fit your usecase:**
 
 ```
-OLLAMA_URL="http://localhost:11434"
+NEXT_PUBLIC_OLLAMA_URL="http://localhost:11434"
 ```
 
 **5. Install dependencies:**

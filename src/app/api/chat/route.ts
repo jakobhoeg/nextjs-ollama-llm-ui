@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const { messages, selectedModel } = await req.json();
 
   const model = new ChatOllama({
-    baseUrl: process.env.OLLAMA_URL,
+    baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434",
     model: selectedModel,
   });
 
