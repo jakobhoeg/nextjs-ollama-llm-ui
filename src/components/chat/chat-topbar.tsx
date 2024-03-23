@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Sidebar } from "../sidebar";
 import { Message } from "ai/react";
+import { getSelectedModel } from "@/lib/model-helper";
 
 interface ChatTopbarProps {
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
@@ -38,47 +39,34 @@ export default function ChatTopbar({
   const [currentModel, setCurrentModel] = React.useState<string | null>(null);
 
   useEffect(() => {
-    const getLocalStorageModel = localStorage.getItem("selectedModel");
-    if (getLocalStorageModel) {
-      setCurrentModel(getLocalStorageModel);
-      setSelectedModel(getLocalStorageModel);
+    setCurrentModel(getSelectedModel());
+
+    const env = process.env.NODE_ENV;
+
+    const fetchModels = async () => {
+      if (env === "production") {
+        const fetchedModels = await fetch(process.env.OLLAMA_URL + "/api/tags");
+        const json = await fetchedModels.json();
+        const apiModels = json.models.map((model : any) => model.name);
+        setModels([...apiModels]);
+      } 
+      else {
+        const fetchedModels = await fetch("/api/tags") 
+        const json = await fetchedModels.json();
+        console.log(json);
+        const apiModels = json.models.map((model : any) => model.name);
+        setModels([...apiModels]);
     }
-
-    const fetchData = async () => {
-      try {
-        const res = await fetch("/api/tags", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "cache-control": "no-cache",
-          },
-        });
-        
-        const data = await res.json();
-        // Extract the "name" field from each model object and store them in the state
-        const modelNames = data.models.map((model: any) => model.name);
-        setModels(modelNames);
-
-        if (!localStorage.getItem("selectedModel")) {
-          // save the first model in the list as selectedModel in localstorage
-          setCurrentModel(modelNames[0]);
-          setSelectedModel(modelNames[0]);
-
-          localStorage.setItem("selectedModel", modelNames[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching models:", error);
-        setCurrentModel("Select model");
-        setModels([]);
-      }
-    };
-    fetchData();
+    }
+    fetchModels();
   }, []);
 
   const handleModelChange = (model: string) => {
     setCurrentModel(model);
     setSelectedModel(model);
-    localStorage.setItem("selectedModel", model);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("selectedModel", model);
+    }
     setOpen(false);
   };
 
