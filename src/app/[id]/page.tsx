@@ -1,9 +1,13 @@
 "use client";
 
 import { ChatLayout } from "@/components/chat/chat-layout";
+import { getSelectedModel } from "@/lib/model-helper";
+import { ChatOllama } from "@langchain/community/chat_models/ollama";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import { BytesOutputParser } from "@langchain/core/output_parsers";
 import { ChatRequestOptions } from "ai";
-import { useChat } from "ai/react";
-import React from "react";
+import { Message, useChat } from "ai/react";
+import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -16,9 +20,24 @@ export default function Page({ params }: { params: { id: string } }) {
     error,
     stop,
     setMessages,
+    setInput
   } = useChat();
   const [chatId, setChatId] = React.useState<string>("");
-  const [selectedModel, setSelectedModel] = React.useState<string>("mistral");
+  const [selectedModel, setSelectedModel] = React.useState<string>(
+    getSelectedModel()
+  );  
+  const [ollama, setOllama] = React.useState<ChatOllama>();
+  const env = process.env.NODE_ENV;
+
+  useEffect(() => {
+    if (env === "production") {
+      const newOllama = new ChatOllama({
+        baseUrl: "http://localhost:11434",
+        model: selectedModel,
+      });
+      setOllama(newOllama);
+    }
+  }, [selectedModel]);
 
   React.useEffect(() => {
     if (params.id) {
@@ -28,6 +47,51 @@ export default function Page({ params }: { params: { id: string } }) {
       }
     }
   }, [setMessages]);
+
+  const addMessage = (Message: any) => {
+    console.log("addMessage:", Message);
+    messages.push(Message);
+    window.dispatchEvent(new Event("storage"));
+    setMessages([...messages]);
+  };
+
+
+// Function to handle chatting with Ollama in production (client side)
+const handleSubmitProduction = async (
+  e: React.FormEvent<HTMLFormElement>
+) => {
+  e.preventDefault();
+
+  addMessage({ role: "user", content: input, id: chatId });
+  setInput("");
+
+  if (ollama) {
+    const parser = new BytesOutputParser();
+
+    console.log(messages);
+    const stream = await ollama
+      .pipe(parser)
+      .stream(
+        (messages as Message[]).map((m) =>
+          m.role == "user"
+            ? new HumanMessage(m.content)
+            : new AIMessage(m.content)
+        )
+      );
+
+    const decoder = new TextDecoder();
+
+    let responseMessage = "";
+    for await (const chunk of stream) {
+      const decodedChunk = decoder.decode(chunk);
+      responseMessage += decodedChunk;
+    }
+    setMessages([
+      ...messages,
+      { role: "assistant", content: responseMessage, id: chatId },
+    ]);
+  }
+};
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,8 +107,13 @@ export default function Page({ params }: { params: { id: string } }) {
       },
     };
 
-    // Call the handleSubmit function with the options
-    handleSubmit(e, requestOptions);
+    if (env === "production" && selectedModel !== "REST API") {
+      handleSubmitProduction(e);
+    } else {
+      // use the /api/chat route
+      // Call the handleSubmit function with the options
+      handleSubmit(e, requestOptions);
+    }
   };
 
   // When starting a new chat, append the messages to the local storage

@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { Input } from "./ui/input";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -25,6 +26,8 @@ const formSchema = z.object({
 export default function PullModelForm() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [name, setName] = useState("");
+  const router = useRouter();
+  const env = process.env.NODE_ENV;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,69 +37,94 @@ export default function PullModelForm() {
     setIsDownloading(true);
     console.log(data);
     // Send the model name to the server
-    fetch("/api/model", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        // Check if response is successful
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+    if (env === "production") {
+      // Make a post request to localhost
+      const pullModel = async () => {
+        const response = await fetch("http://localhost:11434/api/pull", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        const json = await response.json();
+        console.log(json);
+        if (json.error) {
+          toast.error("Error: " + json.error);
+          setIsDownloading(false);
+          return;
+        } else if (json.status === "success") {
+          toast.success("Model pulled successfully");
+          setIsDownloading(false);
+          return;
         }
-        if (!response.body) {
-          throw new Error("Something went wrong");
-        }
-        // Create a new ReadableStream from the response body
-        const reader = response.body.getReader();
-
-        // Read the data in chunks
-        reader.read().then(function processText({ done, value }) {
-          if (done) {
-            console.log("Streaming completed");
-            setIsDownloading(false);
-            return;
+      }
+      pullModel();
+    } else {
+      fetch("/api/model", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => {
+          // Check if response is successful
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
           }
-
-          // Convert the chunk of data to a string
-          const text = new TextDecoder().decode(value);
-          console.log(text);
-
-          // Split the text into individual JSON objects
-          const jsonObjects = text.trim().split("\n");
-
-          jsonObjects.forEach((jsonObject) => {
-            try {
-              const responseJson = JSON.parse(jsonObject);
-              if (responseJson.error) {
-                // Display an error toast if the response contains an error
-                toast.error("Error: " + responseJson.error);
-                setIsDownloading(false);
-                return;
-              } else if (responseJson.status === "success") {
-                // Display a success toast if the response status is success
-                toast.success("Model pulled successfully");
-                setIsDownloading(false);
-                return;
-              }
-            } catch (error) {
-              toast.error("Error parsing JSON");
+          if (!response.body) {
+            throw new Error("Something went wrong");
+          }
+          // Create a new ReadableStream from the response body
+          const reader = response.body.getReader();
+  
+          // Read the data in chunks
+          reader.read().then(function processText({ done, value }) {
+            if (done) {
+              console.log("Streaming completed");
               setIsDownloading(false);
               return;
             }
+  
+            // Convert the chunk of data to a string
+            const text = new TextDecoder().decode(value);
+            console.log(text);
+  
+            // Split the text into individual JSON objects
+            const jsonObjects = text.trim().split("\n");
+  
+            jsonObjects.forEach((jsonObject) => {
+              try {
+                const responseJson = JSON.parse(jsonObject);
+                if (responseJson.error) {
+                  // Display an error toast if the response contains an error
+                  toast.error("Error: " + responseJson.error);
+                  setIsDownloading(false);
+                  return;
+                } else if (responseJson.status === "success") {
+                  // Display a success toast if the response status is success
+                  toast.success("Model pulled successfully");
+                  setIsDownloading(false);
+                  return;
+                }
+              } catch (error) {
+                toast.error("Error parsing JSON");
+                setIsDownloading(false);
+                return;
+              }
+            });
+  
+            // Continue reading the next chunk
+            reader.read().then(processText);
           });
-
-          // Continue reading the next chunk
-          reader.read().then(processText);
+        })
+        .catch((error) => {
+          setIsDownloading(false);
+          console.error("Error pulling model:", error);
+          toast.error("Error pulling model");
         });
-      })
-      .catch((error) => {
-        setIsDownloading(false);
-        console.error("Error pulling model:", error);
-        toast.error("Error pulling model");
-      });
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
