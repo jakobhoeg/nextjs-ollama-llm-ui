@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { TrashIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -48,6 +49,7 @@ export function Sidebar({
   const localChatss = useLocalStorageData("chat_", []);
   const [selectedChatId, setSselectedChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (chatId) {
@@ -108,7 +110,9 @@ export function Sidebar({
       <div className=" flex flex-col justify-between p-2 max-h-fit overflow-y-auto">
         <Button
           onClick={() => {
-            window.location.replace("/");
+            router.push("/");
+            // Clear messages
+            messages.splice(0, messages.length);
           }}
           variant="ghost"
           className="flex justify-between w-full h-14 text-sm xl:text-lg font-normal items-center "
