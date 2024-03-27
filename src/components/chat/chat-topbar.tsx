@@ -105,13 +105,13 @@ export default function ChatTopbar({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[300px] justify-between"
+            className="w-[250px] justify-between truncate"
           >
             {currentModel || "Select model"}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-1">
+        <PopoverContent className="w-[250px] p-1 overflow-x-hidden">
           {models.length > 0 ? (
             models.map((model) => (
               <Button
