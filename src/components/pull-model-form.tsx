@@ -35,7 +35,6 @@ export default function PullModelForm() {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsDownloading(true);
-    console.log(data);
     // Send the model name to the server
     if (env === "production") {
       // Make a post request to localhost
@@ -48,7 +47,6 @@ export default function PullModelForm() {
           body: JSON.stringify(data),
         });
         const json = await response.json();
-        console.log(json);
         if (json.error) {
           toast.error("Error: " + json.error);
           setIsDownloading(false);
@@ -82,14 +80,12 @@ export default function PullModelForm() {
           // Read the data in chunks
           reader.read().then(function processText({ done, value }) {
             if (done) {
-              console.log("Streaming completed");
               setIsDownloading(false);
               return;
             }
   
             // Convert the chunk of data to a string
             const text = new TextDecoder().decode(value);
-            console.log(text);
   
             // Split the text into individual JSON objects
             const jsonObjects = text.trim().split("\n");

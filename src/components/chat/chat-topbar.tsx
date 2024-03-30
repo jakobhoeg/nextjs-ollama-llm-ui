@@ -53,7 +53,6 @@ export default function ChatTopbar({
       else {
         const fetchedModels = await fetch("/api/tags") 
         const json = await fetchedModels.json();
-        console.log(json);
         const apiModels = json.models.map((model : any) => model.name);
         setModels([...apiModels]);
     }
