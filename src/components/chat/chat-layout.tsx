@@ -36,6 +36,7 @@ export function ChatLayout({
   stop,
   chatId,
   setSelectedModel,
+  loadingSubmit
 }: MergedProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const [isMobile, setIsMobile] = useState(false);
@@ -115,6 +116,7 @@ export function ChatLayout({
            handleInputChange={handleInputChange}
            handleSubmit={handleSubmit}
            isLoading={isLoading}
+           loadingSubmit={loadingSubmit}
            error={error}
            stop={stop}
         />

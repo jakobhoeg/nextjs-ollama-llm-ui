@@ -21,13 +21,21 @@ export default function Page({ params }: { params: { id: string } }) {
     stop,
     setMessages,
     setInput
-  } = useChat();
+  } = useChat({
+    onResponse: (response) => {
+      if (response) {
+        setLoadingSubmit(false);
+      }
+    }
+  });
   const [chatId, setChatId] = React.useState<string>("");
   const [selectedModel, setSelectedModel] = React.useState<string>(
     getSelectedModel()
   );  
   const [ollama, setOllama] = React.useState<ChatOllama>();
   const env = process.env.NODE_ENV;
+  const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+
 
   useEffect(() => {
     if (env === "production") {
@@ -49,7 +57,6 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [setMessages]);
 
   const addMessage = (Message: any) => {
-    console.log("addMessage:", Message);
     messages.push(Message);
     window.dispatchEvent(new Event("storage"));
     setMessages([...messages]);
@@ -68,7 +75,6 @@ const handleSubmitProduction = async (
   if (ollama) {
     const parser = new BytesOutputParser();
 
-    console.log(messages);
     const stream = await ollama
       .pipe(parser)
       .stream(
@@ -90,11 +96,13 @@ const handleSubmitProduction = async (
       ...messages,
       { role: "assistant", content: responseMessage, id: chatId },
     ]);
+    setLoadingSubmit(false);
   }
 };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoadingSubmit(true);
 
     setMessages([...messages]);
 
@@ -135,6 +143,7 @@ const handleSubmitProduction = async (
         handleInputChange={handleInputChange}
         handleSubmit={onSubmit}
         isLoading={isLoading}
+        loadingSubmit={loadingSubmit}
         error={error}
         stop={stop}
         navCollapsedSize={10}

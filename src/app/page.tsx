@@ -31,7 +31,13 @@ export default function Home() {
     stop,
     setMessages,
     setInput,
-  } = useChat();
+  } = useChat({
+    onResponse: (response) => {
+      if (response) {
+        setLoadingSubmit(false);
+      }
+    }
+  });
   const [chatId, setChatId] = React.useState<string>("");
   const [selectedModel, setSelectedModel] = React.useState<string>(
     getSelectedModel()
@@ -39,6 +45,7 @@ export default function Home() {
   const [open, setOpen] = React.useState(false);
   const [ollama, setOllama] = useState<ChatOllama>();
   const env = process.env.NODE_ENV;
+  const [loadingSubmit, setLoadingSubmit] = React.useState(false);
 
   React.useEffect(() => {
     if (!isLoading && !error && chatId && messages.length > 0) {
@@ -50,22 +57,20 @@ export default function Home() {
   }, [messages, chatId, isLoading, error]);
 
   useEffect(() => {
-    if (env === "production") {
+    // if (env === "production") {
       const newOllama = new ChatOllama({
         baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434",
         model: selectedModel,
       });
       setOllama(newOllama);
-    }
+    // }
 
-    console.log("selectedModel:", selectedModel);
     if (!localStorage.getItem("ollama_user")) {
       setOpen(true);
     }
   }, [selectedModel]);
 
   const addMessage = (Message: any) => {
-    console.log("addMessage:", Message);
     messages.push(Message);
     window.dispatchEvent(new Event("storage"));
     setMessages([...messages]);
@@ -83,7 +88,6 @@ export default function Home() {
     if (ollama) {
       const parser = new BytesOutputParser();
 
-      console.log(messages);
       const stream = await ollama
         .pipe(parser)
         .stream(
@@ -105,11 +109,13 @@ export default function Home() {
         ...messages,
         { role: "assistant", content: responseMessage, id: chatId },
       ]);
+      setLoadingSubmit(false);
     }
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoadingSubmit(true);
 
     if (messages.length === 0) {
       // Generate a random id for the chat
@@ -147,6 +153,7 @@ export default function Home() {
           handleInputChange={handleInputChange}
           handleSubmit={onSubmit}
           isLoading={isLoading}
+          loadingSubmit={loadingSubmit}
           error={error}
           stop={stop}
           navCollapsedSize={10}
