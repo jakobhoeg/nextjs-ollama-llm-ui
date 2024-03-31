@@ -162,6 +162,7 @@ export function Sidebar({
                       <Button
                         variant="ghost"
                         className="flex justify-end items-center"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <MoreHorizontal size={15} className="shrink-0" />
                       </Button>
@@ -172,6 +173,7 @@ export function Sidebar({
                           <Button
                             variant="ghost"
                             className="w-full flex gap-2 hover:text-red-500 text-red-500 justify-start items-center"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <Trash2 className="shrink-0 w-4 h-4" />
                             Delete chat
