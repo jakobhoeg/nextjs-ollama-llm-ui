@@ -34,6 +34,9 @@ export default function PullModelForm() {
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
+    // Trim whitespace
+    data.name = data.name.trim();
+
     setIsDownloading(true);
     // Send the model name to the server
     if (env === "production") {
