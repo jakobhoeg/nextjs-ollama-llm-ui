@@ -8,6 +8,7 @@ import { BytesOutputParser } from "@langchain/core/output_parsers";
 import { ChatRequestOptions } from "ai";
 import { Message, useChat } from "ai/react";
 import React, { useEffect } from "react";
+import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -20,22 +21,25 @@ export default function Page({ params }: { params: { id: string } }) {
     error,
     stop,
     setMessages,
-    setInput
+    setInput,
   } = useChat({
     onResponse: (response) => {
       if (response) {
         setLoadingSubmit(false);
       }
-    }
+    },
+    onError: (error) => {
+      setLoadingSubmit(false);
+      toast.error("An error occurred. Please try again.");
+    },
   });
   const [chatId, setChatId] = React.useState<string>("");
   const [selectedModel, setSelectedModel] = React.useState<string>(
     getSelectedModel()
-  );  
+  );
   const [ollama, setOllama] = React.useState<ChatOllama>();
   const env = process.env.NODE_ENV;
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
-
 
   useEffect(() => {
     if (env === "production") {
@@ -62,43 +66,47 @@ export default function Page({ params }: { params: { id: string } }) {
     setMessages([...messages]);
   };
 
+  // Function to handle chatting with Ollama in production (client side)
+  const handleSubmitProduction = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
 
-// Function to handle chatting with Ollama in production (client side)
-const handleSubmitProduction = async (
-  e: React.FormEvent<HTMLFormElement>
-) => {
-  e.preventDefault();
+    addMessage({ role: "user", content: input, id: chatId });
+    setInput("");
 
-  addMessage({ role: "user", content: input, id: chatId });
-  setInput("");
+    if (ollama) {
+      try {
+        const parser = new BytesOutputParser();
 
-  if (ollama) {
-    const parser = new BytesOutputParser();
+        const stream = await ollama
+          .pipe(parser)
+          .stream(
+            (messages as Message[]).map((m) =>
+              m.role == "user"
+                ? new HumanMessage(m.content)
+                : new AIMessage(m.content)
+            )
+          );
 
-    const stream = await ollama
-      .pipe(parser)
-      .stream(
-        (messages as Message[]).map((m) =>
-          m.role == "user"
-            ? new HumanMessage(m.content)
-            : new AIMessage(m.content)
-        )
-      );
+        const decoder = new TextDecoder();
 
-    const decoder = new TextDecoder();
-
-    let responseMessage = "";
-    for await (const chunk of stream) {
-      const decodedChunk = decoder.decode(chunk);
-      responseMessage += decodedChunk;
+        let responseMessage = "";
+        for await (const chunk of stream) {
+          const decodedChunk = decoder.decode(chunk);
+          responseMessage += decodedChunk;
+        }
+        setMessages([
+          ...messages,
+          { role: "assistant", content: responseMessage, id: chatId },
+        ]);
+        setLoadingSubmit(false);
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
+        setLoadingSubmit(false);
+      }
     }
-    setMessages([
-      ...messages,
-      { role: "assistant", content: responseMessage, id: chatId },
-    ]);
-    setLoadingSubmit(false);
-  }
-};
+  };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

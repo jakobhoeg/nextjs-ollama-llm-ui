@@ -18,6 +18,7 @@ import { BytesOutputParser } from "@langchain/core/output_parsers";
 import { ChatRequestOptions } from "ai";
 import { Message, useChat } from "ai/react";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
@@ -36,7 +37,11 @@ export default function Home() {
       if (response) {
         setLoadingSubmit(false);
       }
-    }
+    },
+    onError: (error) => {
+      setLoadingSubmit(false);
+      toast.error("An error occurred. Please try again.");
+    },
   });
   const [chatId, setChatId] = React.useState<string>("");
   const [selectedModel, setSelectedModel] = React.useState<string>(
@@ -57,13 +62,13 @@ export default function Home() {
   }, [messages, chatId, isLoading, error]);
 
   useEffect(() => {
-    // if (env === "production") {
+    if (env === "production") {
       const newOllama = new ChatOllama({
         baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434",
         model: selectedModel,
       });
       setOllama(newOllama);
-    // }
+    }
 
     if (!localStorage.getItem("ollama_user")) {
       setOpen(true);
@@ -86,30 +91,35 @@ export default function Home() {
     setInput("");
 
     if (ollama) {
-      const parser = new BytesOutputParser();
+      try {
+        const parser = new BytesOutputParser();
 
-      const stream = await ollama
-        .pipe(parser)
-        .stream(
-          (messages as Message[]).map((m) =>
-            m.role == "user"
-              ? new HumanMessage(m.content)
-              : new AIMessage(m.content)
-          )
-        );
+        const stream = await ollama
+          .pipe(parser)
+          .stream(
+            (messages as Message[]).map((m) =>
+              m.role == "user"
+                ? new HumanMessage(m.content)
+                : new AIMessage(m.content)
+            )
+          );
 
-      const decoder = new TextDecoder();
+        const decoder = new TextDecoder();
 
-      let responseMessage = "";
-      for await (const chunk of stream) {
-        const decodedChunk = decoder.decode(chunk);
-        responseMessage += decodedChunk;
+        let responseMessage = "";
+        for await (const chunk of stream) {
+          const decodedChunk = decoder.decode(chunk);
+          responseMessage += decodedChunk;
+        }
+        setMessages([
+          ...messages,
+          { role: "assistant", content: responseMessage, id: chatId },
+        ]);
+        setLoadingSubmit(false);
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
+        setLoadingSubmit(false);
       }
-      setMessages([
-        ...messages,
-        { role: "assistant", content: responseMessage, id: chatId },
-      ]);
-      setLoadingSubmit(false);
     }
   };
 
