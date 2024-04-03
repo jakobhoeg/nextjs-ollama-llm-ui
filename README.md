@@ -114,3 +114,7 @@ This is a to-do list consisting of upcoming features.
 [Framer Motion](https://www.framer.com/motion/) - Motion/animation library for React
 
 [Lucide Icons](https://lucide.dev/) - Icon library
+
+# Helpful links
+
+[Medium Article](https://medium.com/@bartek.lewicz/launch-your-own-chatgpt-clone-for-free-on-colab-shareable-and-online-in-less-than-10-minutes-da19e44be5eb) - How to launch your own ChatGPT clone for free on Google Colab. By Bartek Lewicz.
