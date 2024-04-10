@@ -7,9 +7,9 @@
 </h1>
 
 <div align="center">
-  
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/jakobhoeg/nextjs-ollama-llm-ui)
-  
+
 </div>
 
 
@@ -51,6 +51,8 @@ OLLAMA_ORIGINS="https://your-app.vercel.app/"
 ```
 
 # Installation to run locally 📖
+
+> make sure to use the correct node version or consider using [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file) to manage your node versions.
 
 To install and run a local environment of the web interface, follow the instructions below.
 
