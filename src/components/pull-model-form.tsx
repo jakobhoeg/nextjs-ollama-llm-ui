@@ -62,7 +62,7 @@ export default function PullModelForm() {
       }
       pullModel();
     } else {
-      fetch("/api/model", {
+      fetch(process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/pull", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,20 +79,20 @@ export default function PullModelForm() {
           }
           // Create a new ReadableStream from the response body
           const reader = response.body.getReader();
-  
+
           // Read the data in chunks
           reader.read().then(function processText({ done, value }) {
             if (done) {
               setIsDownloading(false);
               return;
             }
-  
+
             // Convert the chunk of data to a string
             const text = new TextDecoder().decode(value);
-  
+
             // Split the text into individual JSON objects
             const jsonObjects = text.trim().split("\n");
-  
+
             jsonObjects.forEach((jsonObject) => {
               try {
                 const responseJson = JSON.parse(jsonObject);
@@ -113,7 +113,7 @@ export default function PullModelForm() {
                 return;
               }
             });
-  
+
             // Continue reading the next chunk
             reader.read().then(processText);
           });

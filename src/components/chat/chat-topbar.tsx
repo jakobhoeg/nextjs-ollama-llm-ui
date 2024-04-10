@@ -45,13 +45,17 @@ export default function ChatTopbar({
 
     const fetchModels = async () => {
       if (env === "production") {
-        const fetchedModels = await fetch(process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/tags");
+        const fetchedModels = await fetch(
+          process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/tags"
+        );
         const json = await fetchedModels.json();
-        const apiModels = json.models.map((model : any) => model.name);
+        const apiModels = json.models.map((model: any) => model.name);
         setModels([...apiModels]);
-      } 
+      }
       else {
-        const fetchedModels = await fetch("/api/tags") 
+        const fetchedModels = await fetch(
+          process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/tags"
+        );
         const json = await fetchedModels.json();
         const apiModels = json.models.map((model : any) => model.name);
         setModels([...apiModels]);
