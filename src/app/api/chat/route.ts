@@ -1,16 +1,16 @@
-import { StreamingTextResponse, Message } from "ai";
-import { ChatOllama } from "@langchain/community/chat_models/ollama";
-import { AIMessage, HumanMessage } from "@langchain/core/messages";
-import { BytesOutputParser } from "@langchain/core/output_parsers";
+import { StreamingTextResponse, Message } from 'ai';
+import { ChatOllama } from '@langchain/community/chat_models/ollama';
+import { AIMessage, HumanMessage } from '@langchain/core/messages';
+import { BytesOutputParser } from '@langchain/core/output_parsers';
 
-export const runtime = "edge";
-export const dynamic = "force-dynamic";
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   const { messages, selectedModel } = await req.json();
 
   const model = new ChatOllama({
-    baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434",
+    baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || 'http://localhost:11434',
     model: selectedModel,
   });
 
@@ -20,12 +20,11 @@ export async function POST(req: Request) {
     .pipe(parser)
     .stream(
       (messages as Message[]).map((m) =>
-        m.role == "user"
+        m.role == 'user'
           ? new HumanMessage(m.content)
-          : new AIMessage(m.content)
-      )
+          : new AIMessage(m.content),
+      ),
     );
-
 
   return new StreamingTextResponse(stream);
 }

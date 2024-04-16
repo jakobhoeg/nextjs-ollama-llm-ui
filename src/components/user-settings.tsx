@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   DropdownMenu,
@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 
 import {
   Dialog,
@@ -16,26 +16,26 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { GearIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-import { Skeleton } from "./ui/skeleton";
-import { set } from "zod";
-import UsernameForm from "./username-form";
-import EditUsernameForm from "./edit-username-form";
-import PullModel from "./pull-model";
+} from '@/components/ui/dialog';
+import { Button } from './ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { GearIcon } from '@radix-ui/react-icons';
+import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { Skeleton } from './ui/skeleton';
+import { set } from 'zod';
+import UsernameForm from './username-form';
+import EditUsernameForm from './edit-username-form';
+import PullModel from './pull-model';
 
 export default function UserSettings() {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const username = localStorage.getItem("ollama_user");
+      const username = localStorage.getItem('ollama_user');
       if (username) {
         setName(username);
         setIsLoading(false);
@@ -43,7 +43,7 @@ export default function UserSettings() {
     };
 
     const fetchData = () => {
-      const username = localStorage.getItem("ollama_user");
+      const username = localStorage.getItem('ollama_user');
       if (username) {
         setName(username);
         setIsLoading(false);
@@ -54,10 +54,10 @@ export default function UserSettings() {
     fetchData();
 
     // Listen for storage changes
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
@@ -66,9 +66,9 @@ export default function UserSettings() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex justify-start gap-3 w-full h-14 text-base font-normal items-center "
+          className="flex h-14 w-full items-center justify-start gap-3 text-base font-normal "
         >
-          <Avatar className="flex justify-start items-center overflow-hidden">
+          <Avatar className="flex items-center justify-start overflow-hidden">
             <AvatarImage
               src=""
               alt="AI"
@@ -80,24 +80,24 @@ export default function UserSettings() {
               {name && name.substring(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div className="text-xs truncate">
+          <div className="truncate text-xs">
             {isLoading ? (
-              <Skeleton className="w-20 h-4" />
+              <Skeleton className="h-4 w-20" />
             ) : (
-              name || "Anonymous"
+              name || 'Anonymous'
             )}
           </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48 p-2">
-      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <PullModel />
-          </DropdownMenuItem>
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+          <PullModel />
+        </DropdownMenuItem>
         <Dialog>
           <DialogTrigger className="w-full">
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-              <div className="flex w-full gap-2 p-1 items-center cursor-pointer">
-                <GearIcon className="w-4 h-4" />
+              <div className="flex w-full cursor-pointer items-center gap-2 p-1">
+                <GearIcon className="h-4 w-4" />
                 Settings
               </div>
             </DropdownMenuItem>
@@ -109,8 +109,7 @@ export default function UserSettings() {
             </DialogHeader>
           </DialogContent>
         </Dialog>
-        <Dialog>
-        </Dialog>
+        <Dialog></Dialog>
       </DropdownMenuContent>
     </DropdownMenu>
   );

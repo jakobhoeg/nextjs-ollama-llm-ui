@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Message } from "ai/react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import SidebarSkeleton from "./sidebar-skeleton";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import UserSettings from "./user-settings";
-import { useLocalStorageData } from "@/app/hooks/useLocalStorageData";
-import { ScrollArea, Scrollbar } from "@radix-ui/react-scroll-area";
-import PullModel from "./pull-model";
+import Link from 'next/link';
+import { MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Message } from 'ai/react';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import SidebarSkeleton from './sidebar-skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import UserSettings from './user-settings';
+import { useLocalStorageData } from '@/app/hooks/useLocalStorageData';
+import { ScrollArea, Scrollbar } from '@radix-ui/react-scroll-area';
+import PullModel from './pull-model';
 import {
   Dialog,
   DialogContent,
@@ -20,14 +20,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from './ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { TrashIcon } from "@radix-ui/react-icons";
-import { useRouter } from "next/navigation";
+} from './ui/dropdown-menu';
+import { TrashIcon } from '@radix-ui/react-icons';
+import { useRouter } from 'next/navigation';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -46,7 +46,7 @@ export function Sidebar({
   const [localChats, setLocalChats] = useState<
     { chatId: string; messages: Message[] }[]
   >([]);
-  const localChatss = useLocalStorageData("chat_", []);
+  const localChatss = useLocalStorageData('chat_', []);
   const [selectedChatId, setSselectedChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -60,9 +60,9 @@ export function Sidebar({
     const handleStorageChange = () => {
       setLocalChats(getLocalstorageChats());
     };
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener('storage', handleStorageChange);
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
@@ -71,7 +71,7 @@ export function Sidebar({
     messages: Message[];
   }[] => {
     const chats = Object.keys(localStorage).filter((key) =>
-      key.startsWith("chat_")
+      key.startsWith('chat_'),
     );
 
     if (chats.length === 0) {
@@ -83,7 +83,7 @@ export function Sidebar({
       const item = localStorage.getItem(chat);
       return item
         ? { chatId: chat, messages: JSON.parse(item) }
-        : { chatId: "", messages: [] };
+        : { chatId: '', messages: [] };
     });
 
     // Sort chats by the createdAt date of the first message of each chat
@@ -105,34 +105,34 @@ export function Sidebar({
   return (
     <div
       data-collapsed={isCollapsed}
-      className="relative justify-between group lg:bg-accent/20 lg:dark:bg-card/35 flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2 "
+      className="group relative flex h-full flex-col justify-between gap-4 p-2 data-[collapsed=true]:p-2 lg:bg-accent/20 lg:dark:bg-card/35 "
     >
-      <div className=" flex flex-col justify-between p-2 max-h-fit overflow-y-auto">
+      <div className=" flex max-h-fit flex-col justify-between overflow-y-auto p-2">
         <Button
           onClick={() => {
-            router.push("/");
+            router.push('/');
             // Clear messages
             messages.splice(0, messages.length);
           }}
           variant="ghost"
-          className="flex justify-between w-full h-14 text-sm xl:text-lg font-normal items-center "
+          className="flex h-14 w-full items-center justify-between text-sm font-normal xl:text-lg "
         >
-          <div className="flex gap-3 items-center ">
+          <div className="flex items-center gap-3 ">
             {!isCollapsed && !isMobile && (
               <Image
                 src="/ollama.png"
                 alt="AI"
                 width={28}
                 height={28}
-                className="dark:invert hidden 2xl:block"
+                className="hidden dark:invert 2xl:block"
               />
             )}
             New chat
           </div>
-          <SquarePen size={18} className="shrink-0 w-4 h-4" />
+          <SquarePen size={18} className="h-4 w-4 shrink-0" />
         </Button>
 
-        <div className="flex flex-col pt-10 gap-2">
+        <div className="flex flex-col gap-2 pt-10">
           <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
           {localChats.length > 0 && (
             <div>
@@ -142,18 +142,18 @@ export function Sidebar({
                   href={`/${chatId.substr(5)}`}
                   className={cn(
                     {
-                      [buttonVariants({ variant: "secondaryLink" })]:
+                      [buttonVariants({ variant: 'secondaryLink' })]:
                         chatId.substring(5) === selectedChatId,
-                      [buttonVariants({ variant: "ghost" })]:
+                      [buttonVariants({ variant: 'ghost' })]:
                         chatId.substring(5) !== selectedChatId,
                     },
-                    "flex justify-between w-full h-14 text-base font-normal items-center "
+                    'flex h-14 w-full items-center justify-between text-base font-normal ',
                   )}
                 >
-                  <div className="flex gap-3 items-center truncate">
+                  <div className="flex items-center gap-3 truncate">
                     <div className="flex flex-col">
                       <span className="text-xs font-normal ">
-                        {messages.length > 0 ? messages[0].content : ""}
+                        {messages.length > 0 ? messages[0].content : ''}
                       </span>
                     </div>
                   </div>
@@ -161,7 +161,7 @@ export function Sidebar({
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="flex justify-end items-center"
+                        className="flex items-center justify-end"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <MoreHorizontal size={15} className="shrink-0" />
@@ -172,10 +172,10 @@ export function Sidebar({
                         <DialogTrigger asChild>
                           <Button
                             variant="ghost"
-                            className="w-full flex gap-2 hover:text-red-500 text-red-500 justify-start items-center"
+                            className="flex w-full items-center justify-start gap-2 text-red-500 hover:text-red-500"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <Trash2 className="shrink-0 w-4 h-4" />
+                            <Trash2 className="h-4 w-4 shrink-0" />
                             Delete chat
                           </Button>
                         </DialogTrigger>
@@ -208,7 +208,7 @@ export function Sidebar({
         </div>
       </div>
 
-      <div className="justify-end px-2 py-2 w-full border-t">
+      <div className="w-full justify-end border-t px-2 py-2">
         <UserSettings />
       </div>
     </div>

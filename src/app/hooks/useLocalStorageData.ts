@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 export const useLocalStorageData = (key: string, initialValue: any) => {
   const [data, setData] = useState(initialValue);
-  
+
   useEffect(() => {
     const handleStorageChange = () => {
       const value = localStorage.getItem(key);

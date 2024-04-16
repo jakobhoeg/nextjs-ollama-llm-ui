@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { set, z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { set, z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -12,16 +12,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
-import { ModeToggle } from "./mode-toggle";
-import { toast } from "sonner"
-
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import React, { useEffect, useState } from 'react';
+import { ModeToggle } from './mode-toggle';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   username: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.',
   }),
 });
 
@@ -30,37 +29,37 @@ interface EditUsernameFormProps {
 }
 
 export default function EditUsernameForm({ setOpen }: EditUsernameFormProps) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
 
   useEffect(() => {
-    setName(localStorage.getItem("ollama_user") || "Anonymous");
+    setName(localStorage.getItem('ollama_user') || 'Anonymous');
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      username: '',
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    localStorage.setItem("ollama_user", values.username);
-    window.dispatchEvent(new Event("storage"));
-    toast.success("Name updated successfully");
+    localStorage.setItem('ollama_user', values.username);
+    window.dispatchEvent(new Event('storage'));
+    toast.success('Name updated successfully');
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    form.setValue("username", e.currentTarget.value);
+    form.setValue('username', e.currentTarget.value);
     setName(e.currentTarget.value);
   };
 
   return (
     <Form {...form}>
-       <div className="w-full flex flex-col gap-4 pt-8">
-       <FormLabel>Theme</FormLabel>
+      <div className="flex w-full flex-col gap-4 pt-8">
+        <FormLabel>Theme</FormLabel>
         <ModeToggle />
-       </div>
+      </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -69,16 +68,14 @@ export default function EditUsernameForm({ setOpen }: EditUsernameFormProps) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <div className="md:flex gap-4">
+                <div className="gap-4 md:flex">
                   <Input
                     {...field}
                     type="text"
                     value={name}
                     onChange={(e) => handleChange(e)}
                   />
-                  <Button type="submit">
-                    Change name
-                  </Button>
+                  <Button type="submit">Change name</Button>
                 </div>
               </FormControl>
               <FormMessage />
