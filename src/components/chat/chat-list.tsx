@@ -6,6 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChatProps } from "./chat";
 import Image from "next/image";
 import CodeDisplayBlock from "../code-display-block";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function ChatList({
   messages,
@@ -119,7 +121,9 @@ export default function ChatList({
                     {message.content.split("```").map((part, index) => {
                       if (index % 2 === 0) {
                         return (
-                          <React.Fragment key={index}>{part}</React.Fragment>
+                          <Markdown key={index} remarkPlugins={[remarkGfm]}>
+                            {part}
+                          </Markdown>
                         );
                       } else {
                         return (
@@ -153,11 +157,11 @@ export default function ChatList({
               />
             </Avatar>
             <div className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
-            <div className="flex gap-1">
-              <span className="size-1.5 rounded-full bg-slate-700 motion-safe:animate-[bounce_1s_ease-in-out_infinite] dark:bg-slate-300"></span>
-              <span className="size-1.5 rounded-full bg-slate-700 motion-safe:animate-[bounce_0.5s_ease-in-out_infinite] dark:bg-slate-300"></span>
-              <span className="size-1.5 rounded-full bg-slate-700 motion-safe:animate-[bounce_1s_ease-in-out_infinite] dark:bg-slate-300"></span>
-            </div>
+              <div className="flex gap-1">
+                <span className="size-1.5 rounded-full bg-slate-700 motion-safe:animate-[bounce_1s_ease-in-out_infinite] dark:bg-slate-300"></span>
+                <span className="size-1.5 rounded-full bg-slate-700 motion-safe:animate-[bounce_0.5s_ease-in-out_infinite] dark:bg-slate-300"></span>
+                <span className="size-1.5 rounded-full bg-slate-700 motion-safe:animate-[bounce_1s_ease-in-out_infinite] dark:bg-slate-300"></span>
+              </div>
             </div>
           </div>
         )}
