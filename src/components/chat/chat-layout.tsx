@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "../sidebar";
-import { useChat } from "ai/react";
+import { Message, useChat } from "ai/react";
 import Chat, { ChatProps } from "./chat";
 import ChatList from "./chat-list";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
@@ -18,6 +18,7 @@ interface ChatLayoutProps {
   defaultCollapsed?: boolean;
   navCollapsedSize: number;
   chatId: string;
+  setMessages: (messages: Message[]) => void;
 }
 
 type MergedProps = ChatLayoutProps & ChatProps;
@@ -37,6 +38,7 @@ export function ChatLayout({
   setSelectedModel,
   loadingSubmit,
   formRef,
+  setMessages,
 }: MergedProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const [isMobile, setIsMobile] = useState(false);
@@ -97,6 +99,7 @@ export function ChatLayout({
           messages={messages}
           isMobile={isMobile}
           chatId={chatId}
+          setMessages={setMessages}
         />
       </ResizablePanel>
       <ResizableHandle className={cn("hidden md:flex")} withHandle />

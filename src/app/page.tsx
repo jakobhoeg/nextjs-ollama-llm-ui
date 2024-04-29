@@ -170,6 +170,7 @@ export default function Home() {
           navCollapsedSize={10}
           defaultLayout={[30, 160]}
           formRef={formRef}
+          setMessages={setMessages}
         />
         <DialogContent className="flex flex-col space-y-4">
           <DialogHeader className="space-y-2">
