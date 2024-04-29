@@ -22,7 +22,6 @@ interface ChatLayoutProps {
 
 type MergedProps = ChatLayoutProps & ChatProps;
 
-
 export function ChatLayout({
   defaultLayout = [30, 160],
   defaultCollapsed = false,
@@ -36,12 +35,12 @@ export function ChatLayout({
   stop,
   chatId,
   setSelectedModel,
-  loadingSubmit
+  loadingSubmit,
+  formRef,
 }: MergedProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const [isMobile, setIsMobile] = useState(false);
 
-  
   useEffect(() => {
     const checkScreenWidth = () => {
       setIsMobile(window.innerWidth <= 1023);
@@ -88,8 +87,8 @@ export function ChatLayout({
           )}`;
         }}
         className={cn(
-          isCollapsed ?
-            "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
+          isCollapsed
+            ? "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
             : "hidden md:block"
         )}
       >
@@ -100,25 +99,21 @@ export function ChatLayout({
           chatId={chatId}
         />
       </ResizablePanel>
-      <ResizableHandle className={cn(
-          "hidden md:flex",
-      )}
-        withHandle />
-      <ResizablePanel
-        className="h-full"
-        defaultSize={defaultLayout[1]}
-      >
-        <Chat 
-        chatId={chatId}
+      <ResizableHandle className={cn("hidden md:flex")} withHandle />
+      <ResizablePanel className="h-full" defaultSize={defaultLayout[1]}>
+        <Chat
+          chatId={chatId}
           setSelectedModel={setSelectedModel}
-           messages={messages}
-           input={input}
-           handleInputChange={handleInputChange}
-           handleSubmit={handleSubmit}
-           isLoading={isLoading}
-           loadingSubmit={loadingSubmit}
-           error={error}
-           stop={stop}
+          messages={messages}
+          input={input}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          isLoading={isLoading}
+          loadingSubmit={loadingSubmit}
+          error={error}
+          stop={stop}
+          formRef={formRef}
+          isMobile={isMobile}
         />
       </ResizablePanel>
     </ResizablePanelGroup>

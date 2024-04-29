@@ -17,7 +17,7 @@ import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { BytesOutputParser } from "@langchain/core/output_parsers";
 import { ChatRequestOptions } from "ai";
 import { Message, useChat } from "ai/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
@@ -51,6 +51,7 @@ export default function Home() {
   const [ollama, setOllama] = useState<ChatOllama>();
   const env = process.env.NODE_ENV;
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   React.useEffect(() => {
     if (!isLoading && !error && chatId && messages.length > 0) {
@@ -168,6 +169,7 @@ export default function Home() {
           stop={stop}
           navCollapsedSize={10}
           defaultLayout={[30, 160]}
+          formRef={formRef}
         />
         <DialogContent className="flex flex-col space-y-4">
           <DialogHeader className="space-y-2">
