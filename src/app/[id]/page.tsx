@@ -58,7 +58,7 @@ export default function Page({ params }: { params: { id: string } }) {
         setMessages(JSON.parse(item));
       }
     }
-  }, [setMessages]);
+  }, []);
 
   const addMessage = (Message: any) => {
     messages.push(Message);
@@ -95,12 +95,18 @@ export default function Page({ params }: { params: { id: string } }) {
         for await (const chunk of stream) {
           const decodedChunk = decoder.decode(chunk);
           responseMessage += decodedChunk;
+          setLoadingSubmit(false);
+          setMessages([
+            ...messages,
+            { role: "assistant", content: responseMessage, id: chatId },
+          ]);
         }
-        setMessages([
-          ...messages,
-          { role: "assistant", content: responseMessage, id: chatId },
-        ]);
-        setLoadingSubmit(false);
+        addMessage({ role: "assistant", content: responseMessage, id: chatId });
+        setMessages([...messages]);
+
+        localStorage.setItem(`chat_${params.id}`, JSON.stringify(messages));
+        // Trigger the storage event to update the sidebar component
+        window.dispatchEvent(new Event("storage"));
       } catch (error) {
         toast.error("An error occurred. Please try again.");
         setLoadingSubmit(false);
@@ -156,6 +162,7 @@ export default function Page({ params }: { params: { id: string } }) {
         stop={stop}
         navCollapsedSize={10}
         defaultLayout={[30, 160]}
+        setMessages={setMessages}
       />
     </main>
   );
