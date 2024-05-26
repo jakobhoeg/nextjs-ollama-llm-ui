@@ -53,6 +53,15 @@ export default function Home() {
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
+  useEffect(() => {
+    if (messages.length < 1) {
+      // Generate a random id for the chat
+      console.log("Generating chat id");
+      const id = uuidv4();
+      setChatId(id);
+    }
+  }, [messages]);
+
   React.useEffect(() => {
     if (!isLoading && !error && chatId && messages.length > 0) {
       // Save messages to local storage
@@ -60,7 +69,7 @@ export default function Home() {
       // Trigger the storage event to update the sidebar component
       window.dispatchEvent(new Event("storage"));
     }
-  }, [messages, chatId, isLoading, error]);
+  }, [chatId, isLoading, error]);
 
   useEffect(() => {
     if (env === "production") {
@@ -111,12 +120,18 @@ export default function Home() {
         for await (const chunk of stream) {
           const decodedChunk = decoder.decode(chunk);
           responseMessage += decodedChunk;
+          setLoadingSubmit(false);
+          setMessages([
+            ...messages,
+            { role: "assistant", content: responseMessage, id: chatId },
+          ]);
         }
-        setMessages([
-          ...messages,
-          { role: "assistant", content: responseMessage, id: chatId },
-        ]);
-        setLoadingSubmit(false);
+        addMessage({ role: "assistant", content: responseMessage, id: chatId });
+        setMessages([...messages]);
+
+        localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
+        // Trigger the storage event to update the sidebar component
+        window.dispatchEvent(new Event("storage"));
       } catch (error) {
         toast.error("An error occurred. Please try again.");
         setLoadingSubmit(false);
@@ -127,12 +142,6 @@ export default function Home() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoadingSubmit(true);
-
-    if (messages.length === 0) {
-      // Generate a random id for the chat
-      const id = uuidv4();
-      setChatId(id);
-    }
 
     setMessages([...messages]);
 
