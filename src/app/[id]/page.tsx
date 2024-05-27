@@ -163,6 +163,7 @@ export default function Page({ params }: { params: { id: string } }) {
         navCollapsedSize={10}
         defaultLayout={[30, 160]}
         setMessages={setMessages}
+        setInput={setInput}
       />
     </main>
   );
