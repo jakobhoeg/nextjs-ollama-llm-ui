@@ -180,6 +180,7 @@ export default function Home() {
           defaultLayout={[30, 160]}
           formRef={formRef}
           setMessages={setMessages}
+          setInput={setInput}
         />
         <DialogContent className="flex flex-col space-y-4">
           <DialogHeader className="space-y-2">

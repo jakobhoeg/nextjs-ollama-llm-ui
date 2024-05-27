@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { ChatProps } from "./chat";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,8 @@ import { Button, buttonVariants } from "../ui/button";
 import TextareaAutosize from "react-textarea-autosize";
 import { motion, AnimatePresence } from "framer-motion";
 import { ImageIcon, PaperPlaneIcon, StopIcon } from "@radix-ui/react-icons";
+import { Mic, SendHorizonal } from "lucide-react";
+import useSpeechToText from "@/app/hooks/useSpeechRecognition";
 
 export default function ChatBottombar({
   messages,
@@ -18,6 +20,7 @@ export default function ChatBottombar({
   error,
   stop,
   formRef,
+  setInput,
 }: ChatProps) {
   const [message, setMessage] = React.useState(input);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -47,72 +50,130 @@ export default function ChatBottombar({
     }
   };
 
+  const { isListening, transcript, startListening, stopListening } =
+    useSpeechToText({ continuous: true });
+
+  const listen = () => {
+    isListening ? stopVoiceInput() : startListening();
+  };
+
+  const stopVoiceInput = () => {
+    setInput && setInput(transcript.length ? transcript : "");
+    stopListening();
+  };
+
+  const handleListenClick = () => {
+    listen();
+  };
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) {
+      stopVoiceInput();
+    }
+  }, [isLoading]);
+
   return (
-    <div className="p-4 flex justify-between w-full items-center gap-2">
+    <div className="p-4 pb-7 flex justify-between w-full items-center gap-2">
       <AnimatePresence initial={false}>
-        <motion.div
-          key="input"
-          className="w-full relative mb-2 items-center"
-          layout
-          initial={{ opacity: 0, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1 }}
-          transition={{
-            opacity: { duration: 0.05 },
-            layout: {
-              type: "spring",
-              bounce: 0.15,
-            },
-          }}
-        >
+        <div className="w-full items-center flex relative gap-2">
+          <div className="absolute left-3 z-10">
+            <Button
+              className="shrink-0 rounded-full"
+              variant="ghost"
+              size="icon"
+            >
+              <ImageIcon className="w-5 h-5" />
+            </Button>
+          </div>
           <form
-            ref={formRef}
             onSubmit={handleSubmit}
             className="w-full items-center flex relative gap-2"
           >
-            <div className="flex">
-              <Link
-                href="#"
-                className={cn(
-                  buttonVariants({ variant: "secondary", size: "icon" })
-                )}
-              >
-                <ImageIcon className="w-6 h-6 text-muted-foreground" />
-              </Link>
-            </div>
-
             <TextareaAutosize
               autoComplete="off"
-              value={input}
+              value={
+                isListening ? (transcript.length ? transcript : "") : input
+              }
               ref={inputRef}
               onKeyDown={handleKeyPress}
               onChange={handleInputChange}
               name="message"
-              placeholder="Ask Ollama anything..."
-              className="border-input max-h-20 px-5 py-4 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full border rounded-full flex items-center h-14 resize-none overflow-hidden dark:bg-card/35"
+              placeholder={
+                !isListening ? "Enter your prompt here" : "Listening"
+              }
+              className=" max-h-24 px-14 bg-accent py-[22px] text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full  rounded-full flex items-center h-16 resize-none overflow-hidden dark:bg-card"
             />
             {!isLoading ? (
-              <Button
-                className="shrink-0"
-                variant="secondary"
-                size="icon"
-                type="submit"
-                disabled={isLoading || !input.trim()}
-              >
-                <PaperPlaneIcon className=" w-6 h-6 text-muted-foreground" />
-              </Button>
+              <div className="flex absolute right-3 items-center">
+                {isListening ? (
+                  <div className="flex">
+                    <Button
+                      className="shrink-0 relative rounded-full bg-blue-500/30 hover:bg-blue-400/30 "
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      onClick={handleListenClick}
+                      disabled={isLoading}
+                    >
+                      <Mic className="w-5 h-5 " />
+                      <span className="animate-pulse absolute h-[120%] w-[120%] rounded-full bg-blue-500/30" />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    className="shrink-0 rounded-full"
+                    variant="ghost"
+                    size="icon"
+                    type="button"
+                    onClick={handleListenClick}
+                    disabled={isLoading}
+                  >
+                    <Mic className="w-5 h-5 " />
+                  </Button>
+                )}
+                <Button
+                  className="shrink-0 rounded-full"
+                  variant="ghost"
+                  size="icon"
+                  type="submit"
+                  disabled={isLoading || !input.trim() || isListening}
+                >
+                  <SendHorizonal className="w-5 h-5 " />
+                </Button>
+              </div>
             ) : (
-              <Button
-                className="shrink-0"
-                variant="secondary"
-                size="icon"
-                onClick={stop}
-              >
-                <StopIcon className="w-6 h-6  text-muted-foreground" />
-              </Button>
+              <div className="flex absolute right-3 items-center">
+                <Button
+                  className="shrink-0 rounded-full"
+                  variant="ghost"
+                  size="icon"
+                  type="button"
+                  disabled={true}
+                >
+                  <Mic className="w-5 h-5 " />
+                </Button>
+                <Button
+                  className="shrink-0 rounded-full"
+                  variant="ghost"
+                  size="icon"
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    stop();
+                  }}
+                >
+                  <StopIcon className="w-5 h-5  " />
+                </Button>
+              </div>
             )}
           </form>
-        </motion.div>
+        </div>
       </AnimatePresence>
     </div>
   );

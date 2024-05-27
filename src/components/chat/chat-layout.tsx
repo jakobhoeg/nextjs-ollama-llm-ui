@@ -39,6 +39,7 @@ export function ChatLayout({
   loadingSubmit,
   formRef,
   setMessages,
+  setInput,
 }: MergedProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const [isMobile, setIsMobile] = useState(false);
@@ -103,7 +104,10 @@ export function ChatLayout({
         />
       </ResizablePanel>
       <ResizableHandle className={cn("hidden md:flex")} withHandle />
-      <ResizablePanel className="h-full" defaultSize={defaultLayout[1]}>
+      <ResizablePanel
+        className="h-full w-full flex justify-center"
+        defaultSize={defaultLayout[1]}
+      >
         <Chat
           chatId={chatId}
           setSelectedModel={setSelectedModel}
@@ -117,6 +121,7 @@ export function ChatLayout({
           stop={stop}
           formRef={formRef}
           isMobile={isMobile}
+          setInput={setInput}
         />
       </ResizablePanel>
     </ResizablePanelGroup>
