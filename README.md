@@ -50,9 +50,14 @@ You'll need to set your [OLLAMA_ORIGINS](https://github.com/ollama/ollama/blob/m
 OLLAMA_ORIGINS="https://your-app.vercel.app/"
 ```
 
-# Installation to run locally 📖
+# Installation 📖
 
-To install and run a local environment of the web interface, follow the instructions below.
+[![Packaging status](https://repology.org/badge/vertical-allrepos/nextjs-ollama-llm-ui.svg?columns=3)](https://repology.org/project/nextjs-ollama-llm-ui/versions)
+
+Use a pre-build package from one of the supported packages run a local environment of the web interface.
+Alternatively you can install from source with the instructions below.
+
+## Install from source
 
 **1. Clone the repository to a directory on your pc via command prompt:**
 
