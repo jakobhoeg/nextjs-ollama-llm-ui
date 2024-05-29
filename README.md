@@ -54,7 +54,7 @@ OLLAMA_ORIGINS="https://your-app.vercel.app/"
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/nextjs-ollama-llm-ui.svg?columns=3)](https://repology.org/project/nextjs-ollama-llm-ui/versions)
 
-Use a pre-build package from one of the supported packages run a local environment of the web interface.
+Use a pre-build package from one of the supported package managers to run a local environment of the web interface.
 Alternatively you can install from source with the instructions below.
 
 ## Install from source
