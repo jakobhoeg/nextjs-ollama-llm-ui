@@ -21,9 +21,7 @@ import {Textarea} from "@/components/ui/textarea";
 
 
 const formSchema = z.object({
-    systemPrompt: z.string().min(1, {
-    message: "System prompt must be at least 1 characters.",
-  }),
+    systemPrompt: z.string(),
 });
 
 interface SystemPromptFormProps {
@@ -38,7 +36,6 @@ export default function SystemPromptForm({ setOpen }: SystemPromptFormProps) {
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
         systemPrompt: "",
     },

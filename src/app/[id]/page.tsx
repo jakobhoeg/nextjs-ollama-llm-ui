@@ -118,9 +118,11 @@ export default function Page({params}: { params: { id: string } }) {
         e.preventDefault();
         setLoadingSubmit(true);
         let temp = [...messages];
-        if (messages.length === 0 && localStorage.getItem("ollama_system_prompt")) {
+        if ((temp.length === 0 || temp[0].role !== 'system') && localStorage.getItem("ollama_system_prompt")) {
             // @ts-ignore
-            temp.push({role: "system", content: localStorage.getItem("ollama_system_prompt"), id: uuidv4()})
+            temp.unshift({role: "system", content: localStorage.getItem("ollama_system_prompt"), id: uuidv4()})
+        } else if (temp[0].role === 'system') {
+            temp = temp.slice(1);
         }
 
         setMessages(temp);
