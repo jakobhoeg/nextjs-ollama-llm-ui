@@ -162,9 +162,18 @@ export default function Home() {
     }
   };
 
+  const onOpenChange = (isOpen: boolean) => { 
+    const username = localStorage.getItem("ollama_user")
+    if (username) return setOpen(isOpen)
+
+    localStorage.setItem("ollama_user", "Anonymous")
+    window.dispatchEvent(new Event("storage"))
+    setOpen(isOpen)
+  }
+  
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center ">
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={onOpenChange}>
         <ChatLayout
           chatId=""
           setSelectedModel={setSelectedModel}
