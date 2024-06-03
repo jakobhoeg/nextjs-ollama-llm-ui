@@ -57,6 +57,13 @@ OLLAMA_ORIGINS="https://your-app.vercel.app/"
 Use a pre-build package from one of the supported package managers to run a local environment of the web interface.
 Alternatively you can install from source with the instructions below.
 
+> [!NOTE]  
+> If your frontend runs on something other than `http://localhost` or `http://127.0.0.1`, you'll need to set the OLLAMA_ORIGINS to your frontend url.
+>
+> This is also stated in the [documentation](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server):
+> 
+> `Ollama allows cross-origin requests from 127.0.0.1 and 0.0.0.0 by default. Additional origins can be configured with OLLAMA_ORIGINS`
+
 ## Install from source
 
 **1. Clone the repository to a directory on your pc via command prompt:**
@@ -100,11 +107,11 @@ npm run dev
 # Upcoming features
 
 This is a to-do list consisting of upcoming features.
+- ✅ Voice input support
+- ✅ Code syntax highlighting
 - ⬜️ Ability to send an image in the prompt to utilize vision language models.
 - ⬜️ Ability to regenerate responses
 - ⬜️ Import and export chats
-- ⬜️ Voice input support
-- ✅ Code syntax highlighting
 
 # Tech stack
 
@@ -123,3 +130,5 @@ This is a to-do list consisting of upcoming features.
 # Helpful links
 
 [Medium Article](https://medium.com/@bartek.lewicz/launch-your-own-chatgpt-clone-for-free-on-colab-shareable-and-online-in-less-than-10-minutes-da19e44be5eb) - How to launch your own ChatGPT clone for free on Google Colab. By Bartek Lewicz.
+
+[Lobehub mention](https://lobehub.com/blog/5-ollama-web-ui-recommendation#5-next-js-ollama-llm-ui) - Five Excellent Free Ollama WebUI Client Recommendations
