@@ -8,11 +8,8 @@ import {
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "../sidebar";
-import { Message, useChat } from "ai/react";
+import { Message } from "ai/react";
 import Chat, { ChatProps } from "./chat";
-import ChatList from "./chat-list";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-
 interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -35,7 +32,6 @@ export function ChatLayout({
   error,
   stop,
   chatId,
-  setSelectedModel,
   loadingSubmit,
   formRef,
   setMessages,
@@ -110,7 +106,6 @@ export function ChatLayout({
       >
         <Chat
           chatId={chatId}
-          setSelectedModel={setSelectedModel}
           messages={messages}
           input={input}
           handleInputChange={handleInputChange}

@@ -1,35 +1,31 @@
 export const INITIAL_QUESTIONS = [
   {
-    content: "What is the capital of France?",
+    content:
+      "Which company submitted painting proposal for Texas Park Project?",
   },
   {
-    content: 'Who wrote "To Kill a Mockingbird"?',
+    content:
+      "What is the project number for Texas Park? What is the value of the project?",
   },
   {
-    content: "What is the boiling point of water in Celsius?",
+    content: "Which company provided METRO Transit Center?",
   },
   {
-    content: "How many planets are there in our solar system?",
+    content: "How much is Type A inlet cost?",
   },
   {
-    content: "What year did the Titanic sink?",
+    content: "Does some company propose estimating?",
   },
   {
-    content: "Who painted the Mona Lisa?",
+    content: "In which company David Eizear works?",
   },
   {
-    content: "What is the square root of 144?",
+    content: "Does Texas Park has proposal?",
   },
   {
-    content: "Who is the current President of the United States?",
+    content: "Which company has proposal from Texas Park?",
   },
   {
-    content: "What is the tallest mountain in the world?",
-  },
-  {
-    content: "What is the chemical symbol for gold?",
-  },
-  {
-    content: "Who discovered penicillin?",
+    content: "How much A&B Construction submitted an proposals?",
   },
 ];
