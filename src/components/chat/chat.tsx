@@ -23,6 +23,7 @@ export interface ChatProps {
   formRef: React.RefObject<HTMLFormElement>;
   isMobile?: boolean;
   setInput?: React.Dispatch<React.SetStateAction<string>>;
+  setMessages: (messages: Message[]) => void;
 }
 
 export default function Chat({
@@ -39,6 +40,7 @@ export default function Chat({
   formRef,
   isMobile,
   setInput,
+  setMessages
 }: ChatProps) {
   return (
     <div className="flex flex-col justify-between w-full max-w-3xl h-full ">
@@ -47,6 +49,7 @@ export default function Chat({
         isLoading={isLoading}
         chatId={chatId}
         messages={messages}
+        setMessages={setMessages}
       />
 
       <ChatList
@@ -61,6 +64,7 @@ export default function Chat({
         stop={stop}
         formRef={formRef}
         isMobile={isMobile}
+        setMessages={setMessages}
       />
 
       <ChatBottombar
@@ -74,6 +78,7 @@ export default function Chat({
         stop={stop}
         formRef={formRef}
         setInput={setInput}
+        setMessages={setMessages}
       />
     </div>
   );

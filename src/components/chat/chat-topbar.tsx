@@ -26,6 +26,7 @@ interface ChatTopbarProps {
   isLoading: boolean;
   chatId?: string;
   messages: Message[];
+  setMessages: (messages: Message[]) => void;
 }
 
 export default function ChatTopbar({
@@ -33,9 +34,11 @@ export default function ChatTopbar({
   isLoading,
   chatId,
   messages,
+  setMessages
 }: ChatTopbarProps) {
   const [models, setModels] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
+  const [sheetOpen, setSheetOpen] = React.useState(false);
   const [currentModel, setCurrentModel] = React.useState<string | null>(null);
 
   useEffect(() => {
@@ -69,9 +72,13 @@ export default function ChatTopbar({
     setOpen(false);
   };
 
+  const handleCloseSidebar = () => {
+    setSheetOpen(false);  // Close the sidebar
+  };
+
   return (
     <div className="w-full flex px-4 py-6  items-center justify-between lg:justify-center ">
-      <Sheet>
+      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger>
           <HamburgerMenuIcon className="lg:hidden w-5 h-5" />
         </SheetTrigger>
@@ -81,6 +88,8 @@ export default function ChatTopbar({
             isCollapsed={false}
             isMobile={false}
             messages={messages}
+            setMessages={setMessages}
+            closeSidebar={handleCloseSidebar} 
           />
         </SheetContent>
       </Sheet>

@@ -36,6 +36,7 @@ interface SidebarProps {
   isMobile: boolean;
   chatId: string;
   setMessages: (messages: Message[]) => void;
+  closeSidebar?: () => void;
 }
 
 export function Sidebar({
@@ -44,6 +45,7 @@ export function Sidebar({
   isMobile,
   chatId,
   setMessages,
+  closeSidebar
 }: SidebarProps) {
   const [localChats, setLocalChats] = useState<
     { chatId: string; messages: Message[] }[]
@@ -115,6 +117,9 @@ export function Sidebar({
             router.push("/");
             // Clear messages
             setMessages([]);
+            if (closeSidebar) {
+              closeSidebar();
+            }
           }}
           variant="ghost"
           className="flex justify-between w-full h-14 text-sm xl:text-lg font-normal items-center "
