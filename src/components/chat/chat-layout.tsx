@@ -122,6 +122,7 @@ export function ChatLayout({
           formRef={formRef}
           isMobile={isMobile}
           setInput={setInput}
+          setMessages={setMessages}
         />
       </ResizablePanel>
     </ResizablePanelGroup>
