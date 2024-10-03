@@ -1,31 +1,35 @@
-import { StreamingTextResponse, Message } from "ai";
-import { ChatOllama } from "@langchain/community/chat_models/ollama";
-import { AIMessage, HumanMessage } from "@langchain/core/messages";
-import { BytesOutputParser } from "@langchain/core/output_parsers";
+import { createOllama } from 'ollama-ai-provider';
+import { streamText, convertToCoreMessages, CoreMessage, UserContent } from 'ai';
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const { messages, selectedModel } = await req.json();
+  // Destructure request data
+  const { messages, selectedModel, data } = await req.json();
 
-  const model = new ChatOllama({
-    baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434",
-    model: selectedModel,
+  const initialMessages = messages.slice(0, -1); 
+  const currentMessage = messages[messages.length - 1]; 
+
+  const ollama = createOllama({});
+
+  // Build message content array directly
+  const messageContent: UserContent = [{ type: 'text', text: currentMessage.content }];
+
+  // Add images if they exist
+  data?.images?.forEach((imageUrl: string) => {
+    const image = new URL(imageUrl);
+    messageContent.push({ type: 'image', image });
   });
 
-  const parser = new BytesOutputParser();
+  // Stream text using the ollama model
+  const result = await streamText({
+    model: ollama(selectedModel),
+    messages: [
+      ...convertToCoreMessages(initialMessages),
+      { role: 'user', content: messageContent },
+    ],
+  });
 
-  const stream = await model
-    .pipe(parser)
-    .stream(
-      (messages as Message[]).map((m) =>
-        m.role == "user"
-          ? new HumanMessage(m.content)
-          : new AIMessage(m.content)
-      )
-    );
-
-
-  return new StreamingTextResponse(stream);
+  return result.toDataStreamResponse();
 }

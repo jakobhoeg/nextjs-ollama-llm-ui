@@ -81,6 +81,8 @@ export default function ChatList({
     }, 1);
   };
 
+  messages.map((m) => console.log(m.experimental_attachments))
+
   if (messages.length === 0) {
     return (
       <div className="w-full h-full flex justify-center items-center">
@@ -164,9 +166,20 @@ export default function ChatList({
             <div className="flex gap-3 items-center">
               {message.role === "user" && (
                 <div className="flex items-end gap-3">
-                  <span className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
-                    {message.content}
-                  </span>
+                  <div className="flex flex-col gap-2 bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
+                    <div className="flex gap-2">
+                    {message.experimental_attachments?.filter(attachment => attachment.contentType?.startsWith('image/'),).map((attachment, index) => (
+                      <Image
+                      key={`${message.id}-${index}`}
+                      src={attachment.url}
+                      width={200}
+                      height={200} alt='attached image'
+                      className="rounded-md object-contain"                
+                      />
+                    ))}
+                    </div>
+                    <p className="text-end">{message.content}</p>
+                  </div>
                   <Avatar className="flex justify-start items-center overflow-hidden">
                     <AvatarImage
                       src="/"
