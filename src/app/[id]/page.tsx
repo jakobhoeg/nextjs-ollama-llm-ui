@@ -5,11 +5,12 @@ import { getSelectedModel } from "@/lib/model-helper";
 import { ChatOllama } from "@langchain/community/chat_models/ollama";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { BytesOutputParser } from "@langchain/core/output_parsers";
-import { ChatRequestOptions } from "ai";
+import { Attachment, ChatRequestOptions } from "ai";
 import { Message, useChat } from "ai/react";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
+import useChatStore from "../hooks/useChatStore";
 
 export default function Page({ params }: { params: { id: string } }) {
   const {
@@ -40,6 +41,9 @@ export default function Page({ params }: { params: { id: string } }) {
   const [ollama, setOllama] = React.useState<ChatOllama>();
   const env = process.env.NODE_ENV;
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const base64Images = useChatStore((state) => state.base64Images);
+  const setBase64Images = useChatStore((state) => state.setBase64Images);
 
   useEffect(() => {
     if (env === "production") {
@@ -120,6 +124,13 @@ export default function Page({ params }: { params: { id: string } }) {
 
     setMessages([...messages]);
 
+    const attachments: Attachment[] = base64Images
+    ? base64Images.map((image) => ({
+        contentType: 'image/base64', // Content type for base64 images
+        url: image, // The base64 image data
+      }))
+    : [];
+
     // Prepare the options object with additional body data, to pass the model.
     const requestOptions: ChatRequestOptions = {
       options: {
@@ -127,14 +138,22 @@ export default function Page({ params }: { params: { id: string } }) {
           selectedModel: selectedModel,
         },
       },
+      ...(base64Images && {
+        data: {
+          images: base64Images,
+        },
+        experimental_attachments: attachments
+      }),
     };
 
     if (env === "production" && selectedModel !== "REST API") {
       handleSubmitProduction(e);
+      setBase64Images(null)
     } else {
       // use the /api/chat route
       // Call the handleSubmit function with the options
       handleSubmit(e, requestOptions);
+      setBase64Images(null)
     }
   };
 
@@ -162,6 +181,7 @@ export default function Page({ params }: { params: { id: string } }) {
         stop={stop}
         navCollapsedSize={10}
         defaultLayout={[30, 160]}
+        formRef={formRef}
         setMessages={setMessages}
         setInput={setInput}
       />
