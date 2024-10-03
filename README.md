@@ -109,8 +109,8 @@ npm run dev
 This is a to-do list consisting of upcoming features.
 - ✅ Voice input support
 - ✅ Code syntax highlighting
-- ⬜️ Ability to send an image in the prompt to utilize vision language models.
-- ⬜️ Ability to regenerate responses
+- ✅ Ability to send an image in the prompt to utilize vision language models.
+- ✅ Ability to regenerate responses
 - ⬜️ Import and export chats
 
 # Tech stack
