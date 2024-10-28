@@ -16,7 +16,7 @@ export default function CodeDisplayBlock({ code, lang }: ButtonCodeblockProps) {
   const { theme } = useTheme();
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(code);
+    navigator.clipboard.writeText(code.split("\n").slice(1).join("\n"));
     setisCopied(true);
     toast.success("Code copied to clipboard!");
     setTimeout(() => {
@@ -39,13 +39,9 @@ export default function CodeDisplayBlock({ code, lang }: ButtonCodeblockProps) {
         )}
       </Button>
       <CodeBlock
-        customStyle={
-          theme === "dark"
-            ? { background: "#303033" }
-            : { background: "#fcfcfc" }
-        }
+        customStyle={theme === "dark" ? { background: "#303033" } : { background: "#fcfcfc" }}
         text={code}
-        language="tsx"
+        language={code.split("\n")[0]}
         showLineNumbers={false}
         theme={theme === "dark" ? dracula : github}
       />
