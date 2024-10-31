@@ -8,15 +8,17 @@ import { useTheme } from "next-themes";
 
 interface ButtonCodeblockProps {
   code: string;
-  lang: string;
 }
 
-export default function CodeDisplayBlock({ code, lang }: ButtonCodeblockProps) {
+export default function CodeDisplayBlock({ code }: ButtonCodeblockProps) {
   const [isCopied, setisCopied] = React.useState(false);
   const { theme } = useTheme();
 
+  const filteredCode = code.split("\n").slice(1).join("\n") || code;
+  const language = code.split("\n")[0] || "tsx";
+
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(code.split("\n").slice(1).join("\n"));
+    navigator.clipboard.writeText(filteredCode);
     setisCopied(true);
     toast.success("Code copied to clipboard!");
     setTimeout(() => {
@@ -41,7 +43,7 @@ export default function CodeDisplayBlock({ code, lang }: ButtonCodeblockProps) {
       <CodeBlock
         customStyle={theme === "dark" ? { background: "#303033" } : { background: "#fcfcfc" }}
         text={code}
-        language={code.split("\n")[0]}
+        language={language}
         showLineNumbers={false}
         theme={theme === "dark" ? dracula : github}
       />

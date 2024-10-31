@@ -25,8 +25,7 @@ export default function ChatList({
 }: ChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [name, setName] = React.useState<string>("");
-  const [localStorageIsLoading, setLocalStorageIsLoading] =
-    React.useState(true);
+  const [localStorageIsLoading, setLocalStorageIsLoading] = React.useState(true);
   const [initialQuestions, setInitialQuestions] = React.useState<Message[]>([]);
 
   const scrollToBottom = () => {
@@ -81,7 +80,7 @@ export default function ChatList({
     }, 1);
   };
 
-  messages.map((m) => console.log(m.experimental_attachments))
+  messages.map((m) => console.log(m.experimental_attachments));
 
   if (messages.length === 0) {
     return (
@@ -96,9 +95,7 @@ export default function ChatList({
               height={60}
               className="h-20 w-14 object-contain dark:invert"
             />
-            <p className="text-center text-lg text-muted-foreground">
-              How can I help you today?
-            </p>
+            <p className="text-center text-lg text-muted-foreground">How can I help you today?</p>
           </div>
 
           <div className="absolute bottom-0 w-full px-4 sm:max-w-3xl grid gap-2 sm:grid-cols-2 sm:gap-4 text-sm">
@@ -138,10 +135,7 @@ export default function ChatList({
   }
 
   return (
-    <div
-      id="scroller"
-      className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end"
-    >
+    <div id="scroller" className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end">
       <div className="w-full flex flex-col overflow-x-hidden overflow-y-hidden min-h-full justify-end">
         {messages.map((message, index) => (
           <motion.div
@@ -168,15 +162,18 @@ export default function ChatList({
                 <div className="flex items-end gap-3">
                   <div className="flex flex-col gap-2 bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
                     <div className="flex gap-2">
-                    {message.experimental_attachments?.filter(attachment => attachment.contentType?.startsWith('image/'),).map((attachment, index) => (
-                      <Image
-                      key={`${message.id}-${index}`}
-                      src={attachment.url}
-                      width={200}
-                      height={200} alt='attached image'
-                      className="rounded-md object-contain"                
-                      />
-                    ))}
+                      {message.experimental_attachments
+                        ?.filter((attachment) => attachment.contentType?.startsWith("image/"))
+                        .map((attachment, index) => (
+                          <Image
+                            key={`${message.id}-${index}`}
+                            src={attachment.url}
+                            width={200}
+                            height={200}
+                            alt="attached image"
+                            className="rounded-md object-contain"
+                          />
+                        ))}
                     </div>
                     <p className="text-end">{message.content}</p>
                   </div>
@@ -188,9 +185,7 @@ export default function ChatList({
                       height={6}
                       className="object-contain"
                     />
-                    <AvatarFallback>
-                      {name && name.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
+                    <AvatarFallback>{name && name.substring(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </div>
               )}
@@ -217,17 +212,16 @@ export default function ChatList({
                       } else {
                         return (
                           <pre className="whitespace-pre-wrap" key={index}>
-                            <CodeDisplayBlock code={part} lang="" />
+                            <CodeDisplayBlock code={part} />
                           </pre>
                         );
                       }
                     })}
-                    {isLoading &&
-                      messages.indexOf(message) === messages.length - 1 && (
-                        <span className="animate-pulse" aria-label="Typing">
-                          ...
-                        </span>
-                      )}
+                    {isLoading && messages.indexOf(message) === messages.length - 1 && (
+                      <span className="animate-pulse" aria-label="Typing">
+                        ...
+                      </span>
+                    )}
                   </span>
                 </div>
               )}
