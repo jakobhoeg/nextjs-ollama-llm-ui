@@ -217,7 +217,7 @@ export default function ChatList({
                       } else {
                         return (
                           <pre className="whitespace-pre-wrap" key={index}>
-                            <CodeDisplayBlock code={part} lang="" />
+                            <CodeDisplayBlock code={part} />
                           </pre>
                         );
                       }
