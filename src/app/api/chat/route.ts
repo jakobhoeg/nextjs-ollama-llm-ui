@@ -8,10 +8,12 @@ export async function POST(req: Request) {
   // Destructure request data
   const { messages, selectedModel, data } = await req.json();
 
+  const ollamaUrl = process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434";
+
   const initialMessages = messages.slice(0, -1); 
   const currentMessage = messages[messages.length - 1]; 
 
-  const ollama = createOllama({});
+  const ollama = createOllama({baseURL: ollamaUrl + "/api"});
 
   // Build message content array directly
   const messageContent: UserContent = [{ type: 'text', text: currentMessage.content }];
