@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
 
 @layer base {
   :root {
@@ -70,7 +69,7 @@
 
 :root {
   --scrollbar-thumb-color: #ccc;
-  --scrollbar-thumb-hover-color: #aaa; 
+  --scrollbar-thumb-hover-color: #aaa;
 }
 
 ::-webkit-scrollbar {
@@ -81,7 +80,7 @@
 ::-webkit-scrollbar-thumb {
   background-color: var(--scrollbar-thumb-color);
   border-radius: 999px;
-  transition: width 0.3s, height 0.3s, visibility 0.3s; 
+  transition: width 0.3s, height 0.3s, visibility 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {

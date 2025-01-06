@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Form,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
+  FormControl, // Add FormControl
 } from "@/components/ui/form";
 import { Button } from "./ui/button";
 import { z } from "zod";
@@ -15,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { Input } from "./ui/input";
+import { throttle } from "lodash";
+import useChatStore from "@/app/hooks/useChatStore";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -24,112 +27,112 @@ const formSchema = z.object({
 });
 
 export default function PullModelForm() {
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [name, setName] = useState("");
+  const {
+    isDownloading,
+    downloadProgress,
+    downloadingModel,
+    startDownload,
+    stopDownload,
+    setDownloadProgress,
+  } = useChatStore();
+
   const router = useRouter();
-  const env = process.env.NODE_ENV;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+    },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    // Trim whitespace
-    data.name = data.name.trim();
+  const handlePullModel = async (data: z.infer<typeof formSchema>) => {
+    const modelName = data.name.trim();
+    startDownload(modelName);
 
-    setIsDownloading(true);
-    // Send the model name to the server
-    if (env === "production") {
-      // Make a post request to localhost
-      const pullModel = async () => {
-        const response = await fetch(process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/pull", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-        const json = await response.json();
-        if (json.error) {
-          toast.error("Error: " + json.error);
-          setIsDownloading(false);
-          return;
-        } else if (json.status === "success") {
-          toast.success("Model pulled successfully");
-          setIsDownloading(false);
-          return;
-        }
-      }
-      pullModel();
-    } else {
-      fetch("/api/model", {
+    const throttledSetProgress = throttle((progress: number) => {
+      setDownloadProgress(progress);
+    }, 200);
+
+    let lastStatus: string | null = null;
+
+    try {
+      const response = await fetch("/api/model", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
-      })
-        .then((response) => {
-          // Check if response is successful
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          if (!response.body) {
-            throw new Error("Something went wrong");
-          }
-          // Create a new ReadableStream from the response body
-          const reader = response.body.getReader();
-  
-          // Read the data in chunks
-          reader.read().then(function processText({ done, value }) {
-            if (done) {
-              setIsDownloading(false);
-              return;
-            }
-  
-            // Convert the chunk of data to a string
-            const text = new TextDecoder().decode(value);
-  
-            // Split the text into individual JSON objects
-            const jsonObjects = text.trim().split("\n");
-  
-            jsonObjects.forEach((jsonObject) => {
-              try {
-                const responseJson = JSON.parse(jsonObject);
-                if (responseJson.error) {
-                  // Display an error toast if the response contains an error
-                  toast.error("Error: " + responseJson.error);
-                  setIsDownloading(false);
-                  return;
-                } else if (responseJson.status === "success") {
-                  // Display a success toast if the response status is success
-                  toast.success("Model pulled successfully");
-                  setIsDownloading(false);
-                  return;
-                }
-              } catch (error) {
-                toast.error("Error parsing JSON");
-                setIsDownloading(false);
-                return;
-              }
-            });
-  
-            // Continue reading the next chunk
-            reader.read().then(processText);
-          });
-        })
-        .catch((error) => {
-          setIsDownloading(false);
-          console.error("Error pulling model:", error);
-          toast.error("Error pulling model");
-        });
-    }
-  }
+        body: JSON.stringify({ name: modelName }),
+      });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    form.setValue("name", e.currentTarget.value);
-    setName(e.currentTarget.value);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      if (!response.body) {
+        throw new Error("Something went wrong");
+      }
+
+      await processStream(response.body, throttledSetProgress, lastStatus);
+
+      toast.success("Model pulled successfully");
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        `Error: ${
+          error instanceof Error ? error.message : "Failed to pull model"
+        }`
+      );
+    } finally {
+      stopDownload();
+      throttledSetProgress.cancel();
+    }
+  };
+
+  const processStream = async (
+    body: ReadableStream<Uint8Array>,
+    throttledSetProgress: (progress: number) => void,
+    lastStatus: string | null
+  ) => {
+    const reader = body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const text = decoder.decode(value);
+      const jsonObjects = text.trim().split("\n");
+
+      for (const jsonObject of jsonObjects) {
+        try {
+          const responseJson = JSON.parse(jsonObject);
+
+          if (responseJson.error) {
+            throw new Error(responseJson.error);
+          }
+
+          if (
+            responseJson.completed !== undefined &&
+            responseJson.total !== undefined
+          ) {
+            const progress =
+              (responseJson.completed / responseJson.total) * 100;
+            throttledSetProgress(progress);
+          }
+
+          if (responseJson.status && responseJson.status !== lastStatus) {
+            toast.info(`Status: ${responseJson.status}`);
+            lastStatus = responseJson.status;
+          }
+        } catch (error) {
+          throw new Error("Error parsing JSON");
+        }
+      }
+    }
+  };
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    handlePullModel(data);
   };
 
   return (
@@ -141,13 +144,14 @@ export default function PullModelForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Model name</FormLabel>
-              <Input
-                {...field}
-                type="text"
-                placeholder="llama2"
-                value={name}
-                onChange={(e) => handleChange(e)}
-              />
+              <FormControl>
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="llama2"
+                  value={field.value || ""}
+                />
+              </FormControl>
               <p className="text-xs pt-1">
                 Check the{" "}
                 <a
@@ -160,26 +164,33 @@ export default function PullModelForm() {
                 for a list of available models.
               </p>
               <FormMessage />
+              <div className="space-y-2 w-full">
+                <Button
+                  type="submit"
+                  className="w-full "
+                  disabled={isDownloading}
+                >
+                  {isDownloading ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2Icon className="animate-spin w-4 h-4" />
+                      <span>
+                        Pulling {downloadingModel}...{" "}
+                        {downloadProgress.toFixed(0)}%
+                      </span>
+                    </div>
+                  ) : (
+                    "Pull model"
+                  )}
+                </Button>
+                <p className="text-xs text-center">
+                  {isDownloading
+                    ? "This may take a while. You can safely close this modal and continue using the app."
+                    : "Pressing the button will download the specified model to your device."}
+                </p>
+              </div>
             </FormItem>
           )}
         />
-        <div className="space-y-2 w-full">
-          <Button type="submit" className="w-full " disabled={isDownloading}>
-            {isDownloading ? (
-              <div className="flex items-center gap-2">
-                <Loader2Icon className="animate-spin w-4 h-4" />
-                <span>Pulling model...</span>
-              </div>
-            ) : (
-              "Pull model"
-            )}
-          </Button>
-          <p className="text-xs text-center">
-            {isDownloading
-              ? "This may take a while. You can safely close this modal and continue using the app"
-              : "Pressing the button will download the specified model to your device."}
-          </p>
-        </div>
       </form>
     </Form>
   );
