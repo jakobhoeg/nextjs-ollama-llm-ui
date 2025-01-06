@@ -42,16 +42,6 @@ To use the web interface, these requisites must be met:
 1. Download [Ollama](https://ollama.com/download) and have it running. Or run it in a Docker container. Check the [docs](https://github.com/ollama/ollama) for instructions.
 2. Node.js (18+) and npm is required. [Download](https://nodejs.org/en/download)
 
-# Deploy your own to Vercel or Netlify in one click ✨
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjakobhoeg%2Fnextjs-ollama-llm-ui&env=NEXT_PUBLIC_OLLAMA_URL&envDescription=Your%20Ollama%20URL) [![Deploy to Netlify Button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jakobhoeg/nextjs-ollama-llm-ui)
-
-You'll need to set your [OLLAMA_ORIGINS](https://github.com/ollama/ollama/blob/main/docs/faq.md) environment variable on your machine that is running Ollama:
-
-```
-OLLAMA_ORIGINS="https://your-app.vercel.app/"
-```
-
 # Installation 📖
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/nextjs-ollama-llm-ui.svg?columns=3)](https://repology.org/project/nextjs-ollama-llm-ui/versions)
