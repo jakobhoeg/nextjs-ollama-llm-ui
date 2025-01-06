@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import useChatStore from "@/app/hooks/useChatStore";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export interface ChatProps {
   id: string;
@@ -42,6 +43,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
       console.log(savedMessages);
       saveMessages(id, [...savedMessages, message]);
       setLoadingSubmit(false);
+      router.replace(`/c/${id}`);
     },
     onError: (error) => {
       setLoadingSubmit(false);
@@ -59,7 +61,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.replace(`/c/${id}`);
+    window.history.replaceState({}, "", `/c/${id}`);
 
     if (!selectedModel) {
       toast.error("Please select a model");
@@ -101,7 +103,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
   };
 
   return (
-    <div className="flex flex-col justify-between w-full max-w-3xl h-full ">
+    <div className="flex flex-col w-full max-w-3xl h-full">
       <ChatTopbar
         isLoading={isLoading}
         chatId={id}
@@ -109,23 +111,44 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
         setMessages={setMessages}
       />
 
-      <ChatList
-        messages={messages}
-        handleInputChange={handleInputChange}
-        isLoading={isLoading}
-        loadingSubmit={loadingSubmit}
-        formRef={formRef}
-        isMobile={isMobile}
-      />
-
-      <ChatBottombar
-        input={input}
-        handleInputChange={handleInputChange}
-        handleSubmit={onSubmit}
-        isLoading={isLoading}
-        stop={stop}
-        setInput={setInput}
-      />
+      {messages.length === 0 ? (
+        <div className="flex flex-col h-full w-full items-center gap-4 justify-center">
+          <Image
+            src="/ollama.png"
+            alt="AI"
+            width={40}
+            height={40}
+            className="h-16 w-14 object-contain dark:invert"
+          />
+          <p className="text-center text-base text-muted-foreground">
+            How can I help you today?
+          </p>
+          <ChatBottombar
+            input={input}
+            handleInputChange={handleInputChange}
+            handleSubmit={onSubmit}
+            isLoading={isLoading}
+            stop={stop}
+            setInput={setInput}
+          />
+        </div>
+      ) : (
+        <>
+          <ChatList
+            messages={messages}
+            isLoading={isLoading}
+            loadingSubmit={loadingSubmit}
+          />
+          <ChatBottombar
+            input={input}
+            handleInputChange={handleInputChange}
+            handleSubmit={onSubmit}
+            isLoading={isLoading}
+            stop={stop}
+            setInput={setInput}
+          />
+        </>
+      )}
     </div>
   );
 }

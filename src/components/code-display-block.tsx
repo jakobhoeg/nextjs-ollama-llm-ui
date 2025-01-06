@@ -1,6 +1,6 @@
 "use client";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
-import React from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { CodeBlock, dracula, github } from "react-code-blocks";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
@@ -11,23 +11,48 @@ interface ButtonCodeblockProps {
 }
 
 export default function CodeDisplayBlock({ code }: ButtonCodeblockProps) {
-  const [isCopied, setisCopied] = React.useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const isCopiedRef = useRef(false);
   const { theme } = useTheme();
 
-  const filteredCode = code.split("\n").slice(1).join("\n") || code;
-  const language = code.split("\n")[0] || "tsx";
-  
+  const filteredCode = useMemo(
+    () => code.split("\n").slice(1).join("\n") || code,
+    [code]
+  );
+  const trimmedCode = useMemo(() => filteredCode.trim(), [filteredCode]);
+  const language = useMemo(
+    () =>
+      ["tsx", "js", "python", "css", "html"].includes(code.split("\n")[0])
+        ? code.split("\n")[0]
+        : "tsx",
+    [code]
+  );
+
+  const customStyle = useMemo(
+    () =>
+      theme === "dark" ? { background: "#303033" } : { background: "#fcfcfc" },
+    [theme]
+  );
+  const codeTheme = useMemo(
+    () => (theme === "dark" ? dracula : github),
+    [theme]
+  );
+
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(filteredCode);
-    setisCopied(true);
+    if (isCopiedRef.current) return; // Prevent multiple triggers
+    navigator.clipboard.writeText(trimmedCode);
+    isCopiedRef.current = true;
+    setIsCopied(true);
     toast.success("Code copied to clipboard!");
+
     setTimeout(() => {
-      setisCopied(false);
+      isCopiedRef.current = false;
+      setIsCopied(false);
     }, 1500);
   };
 
   return (
-    <div className="relative my-4 overflow-scroll overflow-x-scroll  flex flex-col   text-start  ">
+    <div className="relative my-4 overflow-hidden flex flex-col text-start">
       <Button
         onClick={copyToClipboard}
         variant="ghost"
@@ -41,15 +66,11 @@ export default function CodeDisplayBlock({ code }: ButtonCodeblockProps) {
         )}
       </Button>
       <CodeBlock
-        customStyle={
-          theme === "dark"
-            ? { background: "#303033" }
-            : { background: "#fcfcfc" }
-        }
-        text={code}
+        customStyle={customStyle}
+        text={trimmedCode}
         language={language}
         showLineNumbers={false}
-        theme={theme === "dark" ? dracula : github}
+        theme={codeTheme}
       />
     </div>
   );

@@ -11,17 +11,18 @@ import {
 import UsernameForm from "@/components/username-form";
 import { generateUUID } from "@/lib/utils";
 import React from "react";
+import useChatStore from "../hooks/useChatStore";
 
 export default function Home() {
   const id = generateUUID();
   const [open, setOpen] = React.useState(false);
+  const userName = useChatStore((state) => state.userName);
+  const setUserName = useChatStore((state) => state.setUserName);
 
   const onOpenChange = (isOpen: boolean) => {
-    const username = localStorage.getItem("ollama_user");
-    if (username) return setOpen(isOpen);
+    if (userName) return setOpen(isOpen);
 
-    localStorage.setItem("ollama_user", "Anonymous");
-    window.dispatchEvent(new Event("storage"));
+    setUserName("Anonymous");
     setOpen(isOpen);
   };
 

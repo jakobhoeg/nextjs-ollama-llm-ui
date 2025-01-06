@@ -61,7 +61,7 @@ export default function ChatTopbar({
   };
 
   return (
-    <div className="w-full flex px-4 py-6  items-center justify-between lg:justify-center ">
+    <div className="w-full flex px-4 py-6 items-center justify-between lg:justify-center ">
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger>
           <HamburgerMenuIcon className="lg:hidden w-5 h-5" />
@@ -72,7 +72,6 @@ export default function ChatTopbar({
             isCollapsed={false}
             isMobile={false}
             messages={messages}
-            setMessages={setMessages}
             closeSidebar={handleCloseSidebar}
           />
         </SheetContent>

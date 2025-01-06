@@ -10,7 +10,6 @@ import { Suspense, useEffect, useState } from "react";
 import SidebarSkeleton from "./sidebar-skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import UserSettings from "./user-settings";
-import { useLocalStorageData } from "@/app/hooks/useLocalStorageData";
 import { ScrollArea, Scrollbar } from "@radix-ui/react-scroll-area";
 import PullModel from "./pull-model";
 import {
@@ -50,7 +49,6 @@ export function Sidebar({
 
   const chats = useChatStore((state) => state.chats);
   const handleDelete = useChatStore((state) => state.handleDelete);
-  console.log(chats);
 
   return (
     <div
@@ -151,6 +149,7 @@ export function Sidebar({
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     handleDelete(id);
+                                    router.push("/");
                                   }}
                                 >
                                   Delete
