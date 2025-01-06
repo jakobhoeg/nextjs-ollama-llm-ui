@@ -47,6 +47,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
     },
     onError: (error) => {
       setLoadingSubmit(false);
+      router.replace("/");
       toast.error("An error occurred. Please try again.");
     },
   });
