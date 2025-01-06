@@ -27,39 +27,12 @@ import { set } from "zod";
 import UsernameForm from "./username-form";
 import EditUsernameForm from "./edit-username-form";
 import PullModel from "./pull-model";
+import useChatStore from "@/app/hooks/useChatStore";
 
 export default function UserSettings() {
-  const [name, setName] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const username = localStorage.getItem("ollama_user");
-      if (username) {
-        setName(username);
-        setIsLoading(false);
-      }
-    };
-
-    const fetchData = () => {
-      const username = localStorage.getItem("ollama_user");
-      if (username) {
-        setName(username);
-        setIsLoading(false);
-      }
-    };
-
-    // Initial fetch
-    fetchData();
-
-    // Listen for storage changes
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  const userName = useChatStore((state) => state.userName);
 
   return (
     <DropdownMenu>
@@ -77,22 +50,18 @@ export default function UserSettings() {
               className="object-contain"
             />
             <AvatarFallback>
-              {name && name.substring(0, 2).toUpperCase()}
+              {userName.substring(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div className="text-xs truncate">
-            {isLoading ? (
-              <Skeleton className="w-20 h-4" />
-            ) : (
-              name || "Anonymous"
-            )}
+            <p>{userName}</p>
           </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48 p-2">
-      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <PullModel />
-          </DropdownMenuItem>
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+          <PullModel />
+        </DropdownMenuItem>
         <Dialog>
           <DialogTrigger className="w-full">
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
@@ -109,8 +78,7 @@ export default function UserSettings() {
             </DialogHeader>
           </DialogContent>
         </Dialog>
-        <Dialog>
-        </Dialog>
+        <Dialog></Dialog>
       </DropdownMenuContent>
     </DropdownMenu>
   );
