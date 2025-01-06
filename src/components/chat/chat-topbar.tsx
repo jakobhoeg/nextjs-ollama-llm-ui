@@ -20,9 +20,9 @@ import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Sidebar } from "../sidebar";
 import { Message } from "ai/react";
 import { getSelectedModel } from "@/lib/model-helper";
+import useChatStore from "@/app/hooks/useChatStore";
 
 interface ChatTopbarProps {
-  setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   chatId?: string;
   messages: Message[];
@@ -30,50 +30,34 @@ interface ChatTopbarProps {
 }
 
 export default function ChatTopbar({
-  setSelectedModel,
   isLoading,
   chatId,
   messages,
-  setMessages
+  setMessages,
 }: ChatTopbarProps) {
   const [models, setModels] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [sheetOpen, setSheetOpen] = React.useState(false);
-  const [currentModel, setCurrentModel] = React.useState<string | null>(null);
+  const selectedModel = useChatStore((state) => state.selectedModel);
+  const setSelectedModel = useChatStore((state) => state.setSelectedModel);
 
   useEffect(() => {
-    setCurrentModel(getSelectedModel());
-
-    const env = process.env.NODE_ENV;
-
     const fetchModels = async () => {
-      if (env === "production") {
-        const fetchedModels = await fetch(process.env.NEXT_PUBLIC_OLLAMA_URL + "/api/tags");
-        const json = await fetchedModels.json();
-        const apiModels = json.models.map((model : any) => model.name);
-        setModels([...apiModels]);
-      } 
-      else {
-        const fetchedModels = await fetch("/api/tags") 
-        const json = await fetchedModels.json();
-        const apiModels = json.models.map((model : any) => model.name);
-        setModels([...apiModels]);
-    }
-    }
+      const fetchedModels = await fetch("/api/tags");
+      const json = await fetchedModels.json();
+      const apiModels = json.models.map((model: any) => model.name);
+      setModels([...apiModels]);
+    };
     fetchModels();
   }, []);
 
   const handleModelChange = (model: string) => {
-    setCurrentModel(model);
     setSelectedModel(model);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem("selectedModel", model);
-    }
     setOpen(false);
   };
 
   const handleCloseSidebar = () => {
-    setSheetOpen(false);  // Close the sidebar
+    setSheetOpen(false); // Close the sidebar
   };
 
   return (
@@ -89,7 +73,7 @@ export default function ChatTopbar({
             isMobile={false}
             messages={messages}
             setMessages={setMessages}
-            closeSidebar={handleCloseSidebar} 
+            closeSidebar={handleCloseSidebar}
           />
         </SheetContent>
       </Sheet>
@@ -103,7 +87,7 @@ export default function ChatTopbar({
             aria-expanded={open}
             className="w-[300px] justify-between"
           >
-            {currentModel || "Select model"}
+            {selectedModel || "Select model"}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
