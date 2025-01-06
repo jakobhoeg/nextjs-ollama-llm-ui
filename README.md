@@ -3,7 +3,7 @@
 </div>
 
 <h1 align="center">
-  Fully-featured & beautiful web interface for Ollama LLMs
+  Fully-featured web interface for Ollama LLMs
 </h1>
 
 <div align="center">
@@ -15,6 +15,8 @@
 
 Get up and running with Large Language Models **quickly**, **locally** and even **offline**.
 This project aims to be the easiest way for you to get started with LLMs. No tedious and annoying setup required!
+
+> This is a hobby project. If you want a more complete experience, I suggest taking a look at [this](https://github.com/open-webui/open-webui) instead.
 
 # Features ✨
 
