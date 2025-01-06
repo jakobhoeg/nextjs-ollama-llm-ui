@@ -24,6 +24,8 @@ function ChatMessage({ message, isLast, isLoading }: ChatMessageProps) {
     [message.content]
   );
 
+  const variant = message.role === "user" ? "sent" : "received";
+
   return (
     <motion.div
       layout
@@ -40,7 +42,7 @@ function ChatMessage({ message, isLast, isLoading }: ChatMessageProps) {
       }}
       className={`flex flex-col gap-2 whitespace-pre-wrap `}
     >
-      <ChatBubble variant={message.role == "user" ? "sent" : "received"}>
+      <ChatBubble variant={variant}>
         <ChatBubbleAvatar
           src={message.role === "assistant" ? "/ollama.png" : ""}
           width={6}

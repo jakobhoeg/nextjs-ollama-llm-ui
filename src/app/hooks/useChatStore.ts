@@ -75,7 +75,6 @@ const useChatStore = create<State & Actions>()(
         return state.chats[chatId]?.messages || [];
       },
       saveMessages: (chatId, messages) => {
-        console.log(`Saving messages for chatId: ${chatId}`, messages);
         set((state) => {
           const existingChat = state.chats[chatId];
 

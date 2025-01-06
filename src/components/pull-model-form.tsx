@@ -77,7 +77,6 @@ export default function PullModelForm() {
       toast.success("Model pulled successfully");
       router.refresh();
     } catch (error) {
-      console.error("Error pulling model:", error);
       toast.error(
         `Error: ${
           error instanceof Error ? error.message : "Failed to pull model"
@@ -126,7 +125,6 @@ export default function PullModelForm() {
             lastStatus = responseJson.status;
           }
         } catch (error) {
-          console.error("Error parsing JSON:", jsonObject);
           throw new Error("Error parsing JSON");
         }
       }

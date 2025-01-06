@@ -41,28 +41,9 @@ export default function ChatBottombar({
   stop,
   setInput,
 }: ChatBottombarProps) {
-  const [message, setMessage] = React.useState(input);
-  const [isMobile, setIsMobile] = React.useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const base64Images = useChatStore((state) => state.base64Images);
   const setBase64Images = useChatStore((state) => state.setBase64Images);
-
-  React.useEffect(() => {
-    const checkScreenWidth = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    // Initial check
-    checkScreenWidth();
-
-    // Event listener for screen width changes
-    window.addEventListener("resize", checkScreenWidth);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", checkScreenWidth);
-    };
-  }, []);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -90,8 +71,9 @@ export default function ChatBottombar({
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
+      console.log("Input focused");
     }
-  }, []);
+  }, [inputRef]);
 
   return (
     <div className="px-4 pb-7 flex justify-between w-full items-center relative ">
