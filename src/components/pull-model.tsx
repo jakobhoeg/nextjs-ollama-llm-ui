@@ -1,26 +1,10 @@
-import React, { useEffect } from "react";
-import { Button } from "./ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import React from "react";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 
 import { DownloadIcon } from "@radix-ui/react-icons";
 import PullModelForm from "./pull-model-form";
 
 export default function PullModel() {
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -30,8 +14,8 @@ export default function PullModel() {
         </div>
       </DialogTrigger>
       <DialogContent className="space-y-2">
-      <DialogTitle>Pull Model</DialogTitle>
-          <PullModelForm />
+        <DialogTitle>Pull Model</DialogTitle>
+        <PullModelForm />
       </DialogContent>
     </Dialog>
   );

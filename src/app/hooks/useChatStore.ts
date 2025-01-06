@@ -12,7 +12,10 @@ interface State {
   chats: Record<string, ChatSession>;
   currentChatId: string | null;
   selectedModel: string | null;
-  userName: string | 'Anonymous';
+  userName: string | "Anonymous";
+  isDownloading: boolean; // New: Track download state
+  downloadProgress: number; // New: Track download progress
+  downloadingModel: string | null; // New: Track which model is being downloaded
 }
 
 interface Actions {
@@ -25,7 +28,11 @@ interface Actions {
   saveMessages: (chatId: string, messages: Message[]) => void;
   handleDelete: (chatId: string, messageId?: string) => void;
   setUserName: (userName: string) => void;
+  startDownload: (modelName: string) => void; // New: Start download
+  stopDownload: () => void; // New: Stop download
+  setDownloadProgress: (progress: number) => void; // New: Update progress
 }
+
 const useChatStore = create<State & Actions>()(
   persist(
     (set, get) => ({
@@ -33,11 +40,14 @@ const useChatStore = create<State & Actions>()(
       chats: {},
       currentChatId: null,
       selectedModel: null,
-      userName: 'Anonymous',
+      userName: "Anonymous",
+      isDownloading: false, // Default download state
+      downloadProgress: 0, // Default progress
+      downloadingModel: null, // Default downloading model
 
+      // Existing actions
       setBase64Images: (base64Images) => set({ base64Images }),
       setUserName: (userName) => set({ userName }),
-
       setMessages: (chatId, fn) =>
         set((state) => {
           const existingChat = state.chats[chatId];
@@ -54,21 +64,16 @@ const useChatStore = create<State & Actions>()(
             },
           };
         }),
-
       setCurrentChatId: (chatId) => set({ currentChatId: chatId }),
-
       setSelectedModel: (selectedModel) => set({ selectedModel }),
-
       getChatById: (chatId) => {
         const state = get();
         return state.chats[chatId];
       },
-
       getMessagesById: (chatId) => {
         const state = get();
         return state.chats[chatId]?.messages || [];
       },
-
       saveMessages: (chatId, messages) => {
         console.log(`Saving messages for chatId: ${chatId}`, messages);
         set((state) => {
@@ -85,7 +90,6 @@ const useChatStore = create<State & Actions>()(
           };
         });
       },
-
       handleDelete: (chatId, messageId) => {
         set((state) => {
           const chat = state.chats[chatId];
@@ -114,6 +118,13 @@ const useChatStore = create<State & Actions>()(
           };
         });
       },
+
+      // New actions for download state
+      startDownload: (modelName) =>
+        set({ isDownloading: true, downloadingModel: modelName, downloadProgress: 0 }),
+      stopDownload: () =>
+        set({ isDownloading: false, downloadingModel: null, downloadProgress: 0 }),
+      setDownloadProgress: (progress) => set({ downloadProgress: progress }),
     }),
     {
       name: "nextjs-ollama-ui-state",
@@ -126,6 +137,5 @@ const useChatStore = create<State & Actions>()(
     }
   )
 );
-
 
 export default useChatStore;

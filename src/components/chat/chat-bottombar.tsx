@@ -94,11 +94,11 @@ export default function ChatBottombar({
   }, []);
 
   return (
-    <div className="px-4 pb-7 flex justify-between w-full items-center relative gap-2">
+    <div className="px-4 pb-7 flex justify-between w-full items-center relative ">
       <AnimatePresence initial={false}>
         <form
           onSubmit={handleSubmit}
-          className="w-full items-center flex flex-col  bg-accent dark:bg-card rounded-lg gap-2"
+          className="w-full items-center flex flex-col  bg-accent dark:bg-card rounded-lg "
         >
           <ChatInput
             value={isListening ? (transcript.length ? transcript : "") : input}

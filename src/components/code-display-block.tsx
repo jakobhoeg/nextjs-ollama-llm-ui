@@ -22,7 +22,7 @@ export default function CodeDisplayBlock({ code }: ButtonCodeblockProps) {
   const trimmedCode = useMemo(() => filteredCode.trim(), [filteredCode]);
   const language = useMemo(
     () =>
-      ["tsx", "js", "python", "css", "html"].includes(code.split("\n")[0])
+      ["tsx", "js", "python", "css", "html", "cs"].includes(code.split("\n")[0])
         ? code.split("\n")[0]
         : "tsx",
     [code]

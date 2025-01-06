@@ -57,7 +57,7 @@ export default function ChatTopbar({
   };
 
   const handleCloseSidebar = () => {
-    setSheetOpen(false); // Close the sidebar
+    setSheetOpen(false);
   };
 
   return (
