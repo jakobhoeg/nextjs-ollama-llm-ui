@@ -13,14 +13,13 @@ interface State {
   currentChatId: string | null;
   selectedModel: string | null;
   userName: string | "Anonymous";
-  isDownloading: boolean; // New: Track download state
-  downloadProgress: number; // New: Track download progress
-  downloadingModel: string | null; // New: Track which model is being downloaded
+  isDownloading: boolean;
+  downloadProgress: number;
+  downloadingModel: string | null;
 }
 
 interface Actions {
   setBase64Images: (base64Images: string[] | null) => void;
-  setMessages: (chatId: string, fn: (messages: Message[]) => Message[]) => void;
   setCurrentChatId: (chatId: string) => void;
   setSelectedModel: (selectedModel: string) => void;
   getChatById: (chatId: string) => ChatSession | undefined;
@@ -28,9 +27,9 @@ interface Actions {
   saveMessages: (chatId: string, messages: Message[]) => void;
   handleDelete: (chatId: string, messageId?: string) => void;
   setUserName: (userName: string) => void;
-  startDownload: (modelName: string) => void; // New: Start download
-  stopDownload: () => void; // New: Stop download
-  setDownloadProgress: (progress: number) => void; // New: Update progress
+  startDownload: (modelName: string) => void;
+  stopDownload: () => void;
+  setDownloadProgress: (progress: number) => void;
 }
 
 const useChatStore = create<State & Actions>()(
@@ -41,29 +40,13 @@ const useChatStore = create<State & Actions>()(
       currentChatId: null,
       selectedModel: null,
       userName: "Anonymous",
-      isDownloading: false, // Default download state
-      downloadProgress: 0, // Default progress
-      downloadingModel: null, // Default downloading model
+      isDownloading: false,
+      downloadProgress: 0,
+      downloadingModel: null, 
 
-      // Existing actions
       setBase64Images: (base64Images) => set({ base64Images }),
       setUserName: (userName) => set({ userName }),
-      setMessages: (chatId, fn) =>
-        set((state) => {
-          const existingChat = state.chats[chatId];
-          const updatedMessages = fn(existingChat?.messages || []);
 
-          return {
-            chats: {
-              ...state.chats,
-              [chatId]: {
-                ...existingChat,
-                messages: updatedMessages,
-                createdAt: existingChat?.createdAt || new Date().toISOString(),
-              },
-            },
-          };
-        }),
       setCurrentChatId: (chatId) => set({ currentChatId: chatId }),
       setSelectedModel: (selectedModel) => set({ selectedModel }),
       getChatById: (chatId) => {
@@ -118,7 +101,6 @@ const useChatStore = create<State & Actions>()(
         });
       },
 
-      // New actions for download state
       startDownload: (modelName) =>
         set({ isDownloading: true, downloadingModel: modelName, downloadProgress: 0 }),
       stopDownload: () =>

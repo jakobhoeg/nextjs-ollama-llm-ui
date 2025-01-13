@@ -30,6 +30,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
     stop,
     setMessages,
     setInput,
+    reload,
   } = useChat({
     id,
     initialMessages,
@@ -40,7 +41,6 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
     },
     onFinish: (message) => {
       const savedMessages = getMessagesById(id);
-      console.log(savedMessages);
       saveMessages(id, [...savedMessages, message]);
       setLoadingSubmit(false);
       router.replace(`/c/${id}`);
@@ -48,7 +48,8 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
     onError: (error) => {
       setLoadingSubmit(false);
       router.replace("/");
-      toast.error("An error occurred. Please try again.");
+      console.error(error.message);
+      console.error(error.cause);
     },
   });
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
@@ -103,6 +104,19 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
     setBase64Images(null);
   };
 
+  const removeLatestMessage = () => {
+    const updatedMessages = messages.slice(0, -1);
+    setMessages(updatedMessages);
+    saveMessages(id, updatedMessages);
+    return updatedMessages;
+  };
+
+  const handleStop = () => {
+    stop();
+    saveMessages(id, [...messages]);
+    setLoadingSubmit(false);
+  };
+
   return (
     <div className="flex flex-col w-full max-w-3xl h-full">
       <ChatTopbar
@@ -129,7 +143,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
             handleInputChange={handleInputChange}
             handleSubmit={onSubmit}
             isLoading={isLoading}
-            stop={stop}
+            stop={handleStop}
             setInput={setInput}
           />
         </div>
@@ -139,13 +153,27 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
             messages={messages}
             isLoading={isLoading}
             loadingSubmit={loadingSubmit}
+            reload={async () => {
+              removeLatestMessage();
+
+              const requestOptions: ChatRequestOptions = {
+                options: {
+                  body: {
+                    selectedModel: selectedModel,
+                  },
+                },
+              };
+
+              setLoadingSubmit(true);
+              return reload(requestOptions);
+            }}
           />
           <ChatBottombar
             input={input}
             handleInputChange={handleInputChange}
             handleSubmit={onSubmit}
             isLoading={isLoading}
-            stop={stop}
+            stop={handleStop}
             setInput={setInput}
           />
         </>
