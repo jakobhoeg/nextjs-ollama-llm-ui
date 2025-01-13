@@ -7,17 +7,22 @@ import {
   ChatBubbleAvatar,
   ChatBubbleMessage,
 } from "../ui/chat/chat-bubble";
+import { ChatRequestOptions } from "ai";
 
 interface ChatListProps {
   messages: Message[];
   isLoading: boolean;
   loadingSubmit?: boolean;
+  reload: (
+    chatRequestOptions?: ChatRequestOptions
+  ) => Promise<string | null | undefined>;
 }
 
 export default function ChatList({
   messages,
   isLoading,
   loadingSubmit,
+  reload,
 }: ChatListProps) {
   return (
     <div className="flex-1 w-full overflow-y-auto">
@@ -28,6 +33,7 @@ export default function ChatList({
             message={message}
             isLast={index === messages.length - 1}
             isLoading={isLoading}
+            reload={reload}
           />
         ))}
         {loadingSubmit && (

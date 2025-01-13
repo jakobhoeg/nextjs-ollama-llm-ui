@@ -11,20 +11,38 @@ import {
   ChatBubbleAvatar,
   ChatBubbleMessage,
 } from "../ui/chat/chat-bubble";
+import ButtonWithTooltip from "../button-with-tooltip";
+import { Button } from "../ui/button";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { ChatRequestOptions } from "ai";
+import { RefreshCcw } from "lucide-react";
 
 export type ChatMessageProps = {
   message: Message;
   isLast: boolean;
   isLoading: boolean | undefined;
+  reload: (
+    chatRequestOptions?: ChatRequestOptions
+  ) => Promise<string | null | undefined>;
 };
 
-function ChatMessage({ message, isLast, isLoading }: ChatMessageProps) {
+function ChatMessage({ message, isLast, isLoading, reload }: ChatMessageProps) {
   const contentParts = useMemo(
     () => message.content.split("```"),
     [message.content]
   );
 
   const variant = message.role === "user" ? "sent" : "received";
+
+  const [isCopied, setisCopied] = React.useState<boolean>(false);
+
+  const copyToClipboard = (response: string) => () => {
+    navigator.clipboard.writeText(response);
+    setisCopied(true);
+    setTimeout(() => {
+      setisCopied(false);
+    }, 1500);
+  };
 
   return (
     <motion.div
@@ -82,6 +100,45 @@ function ChatMessage({ message, isLast, isLoading }: ChatMessageProps) {
               );
             }
           })}
+
+          {message.role === "assistant" && (
+            <div>
+              {/* Action buttons */}
+              <div className="pt-2 flex gap-1 items-center text-muted-foreground">
+                {/* Copy button */}
+                {!isLoading && (
+                  <ButtonWithTooltip side="bottom" toolTipText="Copy">
+                    <Button
+                      onClick={copyToClipboard(message.content)}
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4"
+                    >
+                      {isCopied ? (
+                        <CheckIcon className="w-3.5 h-3.5 transition-all" />
+                      ) : (
+                        <CopyIcon className="w-3.5 h-3.5 transition-all" />
+                      )}
+                    </Button>
+                  </ButtonWithTooltip>
+                )}
+
+                {/* Only show regenerate button on the last ai message */}
+                {!isLoading && isLast && (
+                  <ButtonWithTooltip side="bottom" toolTipText="Regenerate">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4"
+                      onClick={() => reload()}
+                    >
+                      <RefreshCcw className="w-3.5 h-3.5 scale-100 transition-all" />
+                    </Button>
+                  </ButtonWithTooltip>
+                )}
+              </div>
+            </div>
+          )}
         </ChatBubbleMessage>
       </ChatBubble>
     </motion.div>
