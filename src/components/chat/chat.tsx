@@ -86,10 +86,8 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
       : [];
 
     const requestOptions: ChatRequestOptions = {
-      options: {
-        body: {
-          selectedModel: selectedModel,
-        },
+      body: {
+        selectedModel: selectedModel,
       },
       ...(base64Images && {
         data: {
@@ -157,10 +155,8 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
               removeLatestMessage();
 
               const requestOptions: ChatRequestOptions = {
-                options: {
-                  body: {
-                    selectedModel: selectedModel,
-                  },
+                body: {
+                  selectedModel: selectedModel,
                 },
               };
 
