@@ -12,7 +12,6 @@
   
 </div>
 
-
 Get up and running with Large Language Models **quickly**, **locally** and even **offline**.
 This project aims to be the easiest way for you to get started with LLMs. No tedious and annoying setup required!
 
@@ -42,7 +41,25 @@ To use the web interface, these requisites must be met:
 1. Download [Ollama](https://ollama.com/download) and have it running. Or run it in a Docker container. Check the [docs](https://github.com/ollama/ollama) for instructions.
 2. Node.js (18+) and npm is required. [Download](https://nodejs.org/en/download)
 
-# Installation 📖
+# Quick start with Docker
+
+## Installation with prebuilt Docker image
+
+- **If Ollama is running on your pc**:
+
+```
+docker run -d -p 8080:3000 --add-host=host.docker.internal:host-gateway -e OLLAMA_URL=http://host.docker.internal:11434 --name nextjs-ollama-ui --restart always jakobhoeg/nextjs-ollama-ui:latest
+```
+
+- **If Ollama is on a different server than the Web UI**:
+
+```
+docker run -d -p 8080:3000 --add-host=host.docker.internal:host-gateway -e OLLAMA_URL=http://example.com:11434 --name nextjs-ollama-ui --restart always jakobhoeg/nextjs-ollama-ui:latest
+```
+
+> You can also change the default 8080 port if you wish.
+
+# Installation locally 📖
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/nextjs-ollama-llm-ui.svg?columns=3)](https://repology.org/project/nextjs-ollama-llm-ui/versions)
 
@@ -53,7 +70,7 @@ Alternatively you can install from source with the instructions below.
 > If your frontend runs on something other than `http://localhost` or `http://127.0.0.1`, you'll need to set the OLLAMA_ORIGINS to your frontend url.
 >
 > This is also stated in the [documentation](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server):
-> 
+>
 > `Ollama allows cross-origin requests from 127.0.0.1 and 0.0.0.0 by default. Additional origins can be configured with OLLAMA_ORIGINS`
 
 ## Install from source
@@ -99,6 +116,7 @@ npm run dev
 # Upcoming features
 
 This is a to-do list consisting of upcoming features.
+
 - ✅ Voice input support
 - ✅ Code syntax highlighting
 - ✅ Ability to send an image in the prompt to utilize vision language models.
