@@ -57,6 +57,8 @@ docker run -d -p 8080:3000 --add-host=host.docker.internal:host-gateway -e OLLAM
 docker run -d -p 8080:3000 --add-host=host.docker.internal:host-gateway -e OLLAMA_URL=http://example.com:11434 --name nextjs-ollama-ui --restart always jakobhoeg/nextjs-ollama-ui:latest
 ```
 
+> You can also change the default 8080 port if you wish.
+
 # Installation locally 📖
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/nextjs-ollama-llm-ui.svg?columns=3)](https://repology.org/project/nextjs-ollama-llm-ui/versions)
