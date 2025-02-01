@@ -42,14 +42,21 @@ export default function ChatTopbar({
   const setSelectedModel = useChatStore((state) => state.setSelectedModel);
 
   useEffect(() => {
-    const fetchModels = async () => {
-      const fetchedModels = await fetch("/api/tags");
-      const json = await fetchedModels.json();
-      const apiModels = json.models.map((model: any) => model.name);
-      setModels([...apiModels]);
-    };
-    fetchModels();
+    (async () => {
+      try {
+        const res = await fetch("/api/tags");
+        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+
+        const data = await res.json().catch(() => null);
+        if (!data?.models?.length) return;
+
+        setModels(data.models.map(({ name }: { name: string }) => name));
+      } catch (error) {
+        console.error("Error fetching models:", error);
+      }
+    })();
   }, []);
+
 
   const handleModelChange = (model: string) => {
     setSelectedModel(model);
