@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import {
   Form,
@@ -19,6 +17,7 @@ import { Input } from "./ui/input";
 import { throttle } from "lodash";
 import useChatStore from "@/app/hooks/useChatStore";
 import { useRouter } from "next/navigation";
+import AiModelOptions from "./ai-model-options";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -78,8 +77,7 @@ export default function PullModelForm() {
       router.refresh();
     } catch (error) {
       toast.error(
-        `Error: ${
-          error instanceof Error ? error.message : "Failed to pull model"
+        `Error: ${error instanceof Error ? error.message : "Failed to pull model"
         }`
       );
     } finally {
@@ -137,7 +135,7 @@ export default function PullModelForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 max-h-48 overflow-y-hidden" >
         <FormField
           control={form.control}
           name="name"
@@ -145,12 +143,16 @@ export default function PullModelForm() {
             <FormItem>
               <FormLabel>Model name</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="text"
-                  placeholder="llama2"
-                  value={field.value || ""}
-                />
+                <div className="flex flex-col">
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder="Write name or Search for a model to pull"
+                    value={field.value || ""}
+                    list="model-options"
+                  />
+                  <AiModelOptions searchTerm={field.value} />
+                </div>
               </FormControl>
               <p className="text-xs pt-1">
                 Check the{" "}
