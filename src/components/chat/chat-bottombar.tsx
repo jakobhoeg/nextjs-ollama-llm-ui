@@ -20,6 +20,7 @@ import useChatStore from "@/app/hooks/useChatStore";
 import Image from "next/image";
 import { ChatRequestOptions, Message } from "ai";
 import { ChatInput } from "../ui/chat/chat-input";
+import { useTranslation } from "react-i18next"; // 导入 i18n hook
 
 interface ChatBottombarProps {
   handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -76,6 +77,8 @@ export default function ChatBottombar({
     }
   }, [inputRef]);
 
+  const { t } = useTranslation("translation");
+
   return (
     <div className="px-4 pb-7 flex justify-between w-full items-center relative ">
       <AnimatePresence initial={false}>
@@ -89,7 +92,7 @@ export default function ChatBottombar({
             onKeyDown={handleKeyPress}
             onChange={handleInputChange}
             name="message"
-            placeholder={!isListening ? "Enter your prompt here" : "Listening"}
+            placeholder={!isListening ? t("chat.input_prompt_placeholder") : "Listening"}
             className="max-h-40 px-6 pt-6 border-0 shadow-none bg-accent rounded-lg text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed dark:bg-card"
           />
 

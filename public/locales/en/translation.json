@@ -1,0 +1,12 @@
+{
+    "Home": {
+      "welcome_title": "Welcome to Ollama!",
+      "welcome_description": "Enter your name to get started. This is just to personalize your experience.",
+      "anonymous": "anonymous"
+    },
+    "chat": {
+      "help_welcome_message": "How can I help you today?",
+      "input_prompt_placeholder": "Enter your prompt here"
+    }
+  }
+  

@@ -1,0 +1,12 @@
+{
+    "Home": {
+      "welcome_title": "欢迎来到 Ollama UI！",
+      "welcome_description": "为了您的个性化您的体验,请输入您的名字。",
+      "anonymous": "匿名用户"
+    },
+    "chat": {
+      "help_welcome_message": "今天你有什么需要帮助的吗?",
+      "input_prompt_placeholder": "在这里输入您想说的"
+    }
+  }
+  

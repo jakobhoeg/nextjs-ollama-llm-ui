@@ -13,6 +13,8 @@ import { v4 as uuidv4 } from "uuid";
 import useChatStore from "@/app/hooks/useChatStore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useTranslation } from "react-i18next"; // 导入 i18n hook
+import dynamic from 'next/dynamic'
 
 export interface ChatProps {
   id: string;
@@ -52,7 +54,9 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
       console.error(error.cause);
     },
   });
+
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+  const [isReady, setIsReady] = useState(false);  // Add a state to check if translation is ready
   const formRef = useRef<HTMLFormElement>(null);
   const base64Images = useChatStore((state) => state.base64Images);
   const setBase64Images = useChatStore((state) => state.setBase64Images);
@@ -60,6 +64,11 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
   const saveMessages = useChatStore((state) => state.saveMessages);
   const getMessagesById = useChatStore((state) => state.getMessagesById);
   const router = useRouter();
+  const { t } = useTranslation("translation"); // 使用 i18n 获取翻译
+
+  useEffect(() => {
+      setIsReady(true);  // Ensure translation is ready before rendering content
+  });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -133,9 +142,15 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
             height={40}
             className="h-16 w-14 object-contain dark:invert"
           />
-          <p className="text-center text-base text-muted-foreground">
-            How can I help you today?
-          </p>
+          {isReady ? (  // Ensure translation is ready before rendering the text
+            <p className="text-center text-base text-muted-foreground">
+              {t("chat.help_welcome_message")}
+            </p>
+          ) : (
+            <p className="text-center text-base text-muted-foreground">
+              Loading...
+            </p>
+          )}
           <ChatBottombar
             input={input}
             handleInputChange={handleInputChange}

@@ -12,8 +12,10 @@ import UsernameForm from "@/components/username-form";
 import { generateUUID } from "@/lib/utils";
 import React from "react";
 import useChatStore from "../hooks/useChatStore";
+import { useTranslation } from "react-i18next";  // 导入 i18n hook
 
 export default function Home() {
+  const { t } = useTranslation("translation"); // 使用 i18n 获取翻译
   const id = generateUUID();
   const [open, setOpen] = React.useState(false);
   const userName = useChatStore((state) => state.userName);
@@ -22,7 +24,7 @@ export default function Home() {
   const onOpenChange = (isOpen: boolean) => {
     if (userName) return setOpen(isOpen);
 
-    setUserName("Anonymous");
+    setUserName(t("Home.anonymous"));
     setOpen(isOpen);
   };
 
@@ -38,10 +40,10 @@ export default function Home() {
         />
         <DialogContent className="flex flex-col space-y-4">
           <DialogHeader className="space-y-2">
-            <DialogTitle>Welcome to Ollama!</DialogTitle>
+            {/* 使用翻译文件中的 "Home" 分类键 */}
+            <DialogTitle>{t("Home.welcome_title")}</DialogTitle>
             <DialogDescription>
-              Enter your name to get started. This is just to personalize your
-              experience.
+              {t("Home.welcome_description")}
             </DialogDescription>
             <UsernameForm setOpen={setOpen} />
           </DialogHeader>
