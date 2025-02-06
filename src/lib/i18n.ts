@@ -6,7 +6,7 @@ import Backend from 'i18next-http-backend'; // 引入 http-backend 插件
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 // 支持的语言列表
-export const languages = ["en", "zh"];
+export const languages = ["en", "zh-CN"];
 export const defaultLanguage = "en";
 
 i18n

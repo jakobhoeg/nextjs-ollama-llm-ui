@@ -28,11 +28,14 @@ import UsernameForm from "./username-form";
 import EditUsernameForm from "./edit-username-form";
 import PullModel from "./pull-model";
 import useChatStore from "@/app/hooks/useChatStore";
+import { useTranslation } from "react-i18next";
 
 export default function UserSettings() {
   const [open, setOpen] = useState(false);
 
   const userName = useChatStore((state) => state.userName);
+
+  const { t } = useTranslation("translation"); // 使用 i18n 获取翻译
 
   return (
     <DropdownMenu>
@@ -67,13 +70,13 @@ export default function UserSettings() {
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <div className="flex w-full gap-2 p-1 items-center cursor-pointer">
                 <GearIcon className="w-4 h-4" />
-                Settings
+                {t("settings")}
               </div>
             </DropdownMenuItem>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader className="space-y-4">
-              <DialogTitle>Settings</DialogTitle>
+              <DialogTitle>{t("settings")}</DialogTitle>
               <EditUsernameForm setOpen={setOpen} />
             </DialogHeader>
           </DialogContent>

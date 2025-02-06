@@ -22,6 +22,10 @@ export interface ChatProps {
   isMobile?: boolean;
 }
 
+const DynamicChatComponent = dynamic(() => import('./chat-topbar'), { ssr: false });
+const DynamicChatList = dynamic(() => import('./chat-list'), { ssr: false });
+const DynamicChatBottombar = dynamic(() => import('./chat-bottombar'), { ssr: false });
+
 export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
   const {
     messages,
@@ -65,10 +69,12 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
   const getMessagesById = useChatStore((state) => state.getMessagesById);
   const router = useRouter();
   const { t } = useTranslation("translation"); // 使用 i18n 获取翻译
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-      setIsReady(true);  // Ensure translation is ready before rendering content
-  });
+    setIsClient(true); // 在客户端渲染时设置 isClient
+    setIsReady(true);  // Ensure translation is ready before rendering content
+  }, []);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -124,9 +130,13 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
     setLoadingSubmit(false);
   };
 
+  if (!isClient) {
+    return null; // 在客户端渲染前，不显示组件
+  }
+
   return (
     <div className="flex flex-col w-full max-w-3xl h-full">
-      <ChatTopbar
+      <DynamicChatComponent
         isLoading={isLoading}
         chatId={id}
         messages={messages}
@@ -148,10 +158,10 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
             </p>
           ) : (
             <p className="text-center text-base text-muted-foreground">
-              Loading...
+              {t("chat.loading")}
             </p>
           )}
-          <ChatBottombar
+          <DynamicChatBottombar
             input={input}
             handleInputChange={handleInputChange}
             handleSubmit={onSubmit}
@@ -162,7 +172,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
         </div>
       ) : (
         <>
-          <ChatList
+          <DynamicChatList
             messages={messages}
             isLoading={isLoading}
             loadingSubmit={loadingSubmit}
@@ -179,7 +189,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
               return reload(requestOptions);
             }}
           />
-          <ChatBottombar
+          <DynamicChatBottombar
             input={input}
             handleInputChange={handleInputChange}
             handleSubmit={onSubmit}

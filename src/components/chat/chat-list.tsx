@@ -8,6 +8,7 @@ import {
   ChatBubbleMessage,
 } from "../ui/chat/chat-bubble";
 import { ChatRequestOptions } from "ai";
+import { useTranslation } from "react-i18next";
 
 interface ChatListProps {
   messages: Message[];

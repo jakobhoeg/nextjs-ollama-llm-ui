@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Message } from "ai/react";
 import Image from "next/image";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import SidebarSkeleton from "./sidebar-skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import UserSettings from "./user-settings";
@@ -19,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose, // 导入 DialogClose
 } from "./ui/dialog";
 import {
   DropdownMenu,
@@ -28,6 +29,7 @@ import {
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import useChatStore from "@/app/hooks/useChatStore";
+import { useTranslation } from "react-i18next";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -49,6 +51,8 @@ export function Sidebar({
 
   const chats = useChatStore((state) => state.chats);
   const handleDelete = useChatStore((state) => state.handleDelete);
+
+  const { t } = useTranslation("translation");
 
   return (
     <div
@@ -76,20 +80,19 @@ export function Sidebar({
                 className="dark:invert hidden 2xl:block"
               />
             )}
-            New chat
+            {t("chat.new_chat")}
           </div>
           <SquarePen size={18} className="shrink-0 w-4 h-4" />
         </Button>
 
         <div className="flex flex-col pt-10 gap-2">
-          <p className="pl-4 text-xs text-muted-foreground">Your chats</p>
-          <Suspense fallback>
+          <p className="pl-4 text-xs text-muted-foreground">{t("chat.user_chats")}</p>
+          <Suspense fallback={<SidebarSkeleton />}>
             {chats &&
               Object.entries(chats)
                 .sort(
                   ([, a], [, b]) =>
-                    new Date(b.createdAt).getTime() -
-                    new Date(a.createdAt).getTime()
+                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 )
                 .map(([id, chat]) => (
                   <Link
@@ -123,7 +126,7 @@ export function Sidebar({
                           <MoreHorizontal size={15} className="shrink-0" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className=" ">
+                      <DropdownMenuContent>
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
@@ -132,18 +135,18 @@ export function Sidebar({
                               onClick={(e) => e.stopPropagation()}
                             >
                               <Trash2 className="shrink-0 w-4 h-4" />
-                              Delete chat
+                              {t("chat.delete_chat")}
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader className="space-y-4">
-                              <DialogTitle>Delete chat?</DialogTitle>
-                              <DialogDescription>
-                                Are you sure you want to delete this chat? This
-                                action cannot be undone.
-                              </DialogDescription>
+                              <DialogTitle>{t("chat.delete_confirmation_title")}</DialogTitle>
+                              <DialogDescription>{t("chat.delete_confirmation_description")}</DialogDescription>
                               <div className="flex justify-end gap-2">
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline">
+                                  {/* 使用DialogClose来自动关闭对话框 */}
+                                  <DialogClose>{t("chat.cancel")}</DialogClose>
+                                </Button>
                                 <Button
                                   variant="destructive"
                                   onClick={(e) => {
@@ -152,7 +155,7 @@ export function Sidebar({
                                     router.push("/");
                                   }}
                                 >
-                                  Delete
+                                  {t("chat.delete")}
                                 </Button>
                               </div>
                             </DialogHeader>

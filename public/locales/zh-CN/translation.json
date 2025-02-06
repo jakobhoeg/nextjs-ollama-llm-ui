@@ -1,12 +1,47 @@
 {
-    "Home": {
-      "welcome_title": "欢迎来到 Ollama UI！",
-      "welcome_description": "为了您的个性化您的体验,请输入您的名字。",
-      "anonymous": "匿名用户"
-    },
-    "chat": {
-      "help_welcome_message": "今天你有什么需要帮助的吗?",
-      "input_prompt_placeholder": "在这里输入您想说的"
-    }
-  }
-  
+  "Home": {
+    "welcome_title": "欢迎来到 Ollama UI！",
+    "welcome_description": "为了您的个性化体验,请输入您的用户名。",
+    "anonymous": "匿名用户"
+  },
+  "chat": {
+    "help_welcome_message": "今天有需要我帮忙的吗？",
+    "input_prompt_placeholder": "在这里输入。",
+    "loading": "加载中...",
+    "model_select": "选择模型",
+    "no_models_available": "没有可用的模型",
+    "thinking_process": "思考中...",
+    "new_chat": "新的对话",
+    "user_chats": "你的对话记录",
+    "delete_chat": "删除对话",
+    "delete_confirmation_title": "您确定要删除此对话吗？",
+    "delete_confirmation_description": "此操作无法撤销。",
+    "cancel": "取消",
+    "delete": "删除"
+  },
+  "model": {
+    "model_select": "选择模型",
+    "model_pull_success": "模型下载成功",
+    "status": "状态",
+    "pulling": "下载",
+    "pull_model": "下载模型",
+    "start_pull_model": "开始下载模型",
+    "library_check": "查看",
+    "library_link": "列表",
+    "download_in_progress": "这可能需要一段时间，您可以安全地关闭此框并继续忙其他事。",
+    "download_info": "按下按钮将下载指定的模型到您的设备。"
+  },
+  "theme": {
+    "theme":"主题",
+    "system": "跟随系统",
+    "dark": "暗色",
+    "light": "亮色"
+  },
+  "name": "用户",
+  "change_name": "更改用户名",
+  "drop_images_here": "将图片拖到这里",
+  "input_name": "请输入您的姓名",
+  "user_name": "用户名",
+  "user_name_updated_successfully": "用户名更新成功",
+  "settings": "设置"
+}
