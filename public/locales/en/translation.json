@@ -1,0 +1,51 @@
+{
+    "Home": {
+      "welcome_title": "Welcome to Ollama!",
+      "welcome_description": "Enter your name to get started. This is just to personalize your experience.",
+      "anonymous": "Anonymous"
+    },
+    "chat": {
+      "help_welcome_message": "How can I help you today?",
+      "input_prompt_placeholder": "Enter your prompt here",
+      "loading": "Loading...",
+      "model_select": "Select model",
+      "no_models_available": "No models available",
+      "thinking_process": "Thinking process",
+      "new_chat": "New Chat",
+      "user_chats": "Your Chats",
+      "delete_chat": "Delete chat",
+      "delete_confirmation_title": "Are you sure you want to delete this chat?",
+      "delete_confirmation_description": "This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
+      
+    },
+
+    "theme": {
+      "theme":"Theme",
+      "system": "System",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "model": {
+      "model_select": "Select model",
+      "model_pull_success": "Model pulled successfully",
+      "status": "Status",
+      "pulling": "Pulling",
+      "pull_model": "Pull model",
+      "start_pull_model": "Start Pull Model",
+      "library_check": "Check the",
+      "library_link": "library",
+      "download_in_progress": "This may take a while. You can safely close this modal and continue using the app.",
+      "download_info": "Pressing the button will download the specified model to your device."
+    },
+    "name": "Name",
+    "change_name": "Change name",
+    "drop_images_here": "Drop the images here",
+    "input_name": "Enter your name",
+    "user_name": "username",
+    "user_name_updated_successfully": "Name updated successfully",
+    "settings": "Settings"
+    
+  }
+  

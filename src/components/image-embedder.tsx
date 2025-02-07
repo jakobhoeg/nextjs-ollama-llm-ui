@@ -4,6 +4,7 @@ import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "./ui/button";
 import { ImageIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface MultiImagePickerProps {
   onImagesPick: (base64Images: string[]) => void;
@@ -11,6 +12,7 @@ interface MultiImagePickerProps {
 }
 
 const MultiImagePicker: React.FC<MultiImagePickerProps> = ({ onImagesPick, disabled }) => {
+  const { t } = useTranslation("translation"); // 使用 i18n 获取翻译
   const convertToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -46,7 +48,7 @@ const MultiImagePicker: React.FC<MultiImagePickerProps> = ({ onImagesPick, disab
       <input disabled={disabled} {...getInputProps()} />
       <Button disabled={disabled} type="button" variant="ghost" size="icon" className="rounded-full shrink-0">
         <ImageIcon className="w-5 h-5" />
-        {isDragActive && <span className="sr-only">Drop the images here</span>}
+        {isDragActive && <span className="sr-only">{t("drop_images_here")}</span>}
       </Button>
     </div>
   );

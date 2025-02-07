@@ -4,15 +4,19 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
 import clsx from "clsx";
+import I18nSwitch from "./i18n-switch";
+import { useTranslation } from "react-i18next";
 
 export function ModeToggle() {
   const { setTheme, theme } = useTheme();
+  const { t } = useTranslation("translation"); // 使用 i18n 获取翻译
 
   return (
     <div
       defaultValue={theme}
       className="flex gap-2 *:transition-all *:duration-300"
     >
+      <I18nSwitch />
       <Button
         variant={theme === "system" ? "default" : "outline"}
         className={clsx("space-x-2 w-full ", { "rounded-full": theme === "system" })}
@@ -20,7 +24,7 @@ export function ModeToggle() {
       >
         <Monitor className="size-4" />
 
-        <p>System</p>
+        <p>{t("theme.system")}</p>
       </Button>
       <Button
         variant={theme === "light" ? "default" : "outline"}
@@ -28,7 +32,7 @@ export function ModeToggle() {
         onClick={() => setTheme("light")}
       >
         <Sun className="size-4" />
-        <p>Light</p>
+        <p>{t("theme.light")}</p>
       </Button>
       <Button
         variant={theme === "dark" ? "default" : "outline"}
@@ -37,7 +41,7 @@ export function ModeToggle() {
       >
         <Moon className="size-4" />
 
-        <p>Dark</p>
+        <p>{t("theme.dark")}</p>
       </Button>
     </div>
   );

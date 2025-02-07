@@ -10,6 +10,7 @@ const useSpeechToText = (options: SpeechRecognitionOptions = {}) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const optionsRef = useRef(options);
 
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) {
@@ -57,7 +58,7 @@ const useSpeechToText = (options: SpeechRecognitionOptions = {}) => {
         recognitionRef.current.stop();
       }
     };
-  }, []);
+  }, [options]);
 
   const startListening = () => {
     if (recognitionRef.current && !isListening) {

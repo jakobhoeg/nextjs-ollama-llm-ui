@@ -15,6 +15,7 @@ import {
 import ButtonWithTooltip from "../button-with-tooltip";
 import { Button } from "../ui/button";
 import CodeDisplayBlock from "../code-display-block";
+import { useTranslation } from "react-i18next";
 
 export type ChatMessageProps = {
   message: Message;
@@ -78,11 +79,13 @@ function ChatMessage({ message, isLast, isLoading, reload }: ChatMessageProps) {
     </div>
   );
 
+  const { t } = useTranslation("translation"); // 使用 i18n 获取翻译
+
   const renderThinkingProcess = () => (
     thinkContent && message.role === "assistant" && (
       <details className="mb-2 text-sm" open>
         <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-          Thinking process
+          {t("chat.thinking_process")}
         </summary>
         <div className="mt-2 text-muted-foreground">
           <Markdown remarkPlugins={[remarkGfm]}>{thinkContent}</Markdown>

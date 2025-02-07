@@ -7,7 +7,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormControl, // Add FormControl
+  FormControl,
 } from "@/components/ui/form";
 import { Button } from "./ui/button";
 import { z } from "zod";
@@ -19,6 +19,7 @@ import { Input } from "./ui/input";
 import { throttle } from "lodash";
 import useChatStore from "@/app/hooks/useChatStore";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";  // 引入 i18n
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -37,6 +38,7 @@ export default function PullModelForm() {
   } = useChatStore();
 
   const router = useRouter();
+  const { t } = useTranslation();  // 使用翻译函数
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -74,7 +76,7 @@ export default function PullModelForm() {
 
       await processStream(response.body, throttledSetProgress, lastStatus);
 
-      toast.success("Model pulled successfully");
+      toast.success(t("model.model_pull_success"));  // 使用翻译
       router.refresh();
     } catch (error) {
       toast.error(
@@ -121,7 +123,7 @@ export default function PullModelForm() {
           }
 
           if (responseJson.status && responseJson.status !== lastStatus) {
-            toast.info(`Status: ${responseJson.status}`);
+            toast.info(`${t("model.status")}: ${responseJson.status}`);  // 使用翻译
             lastStatus = responseJson.status;
           }
         } catch (error) {
@@ -143,7 +145,7 @@ export default function PullModelForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Model name</FormLabel>
+              <FormLabel>{t("model.model_select")}</FormLabel> {/* 使用翻译 */}
               <FormControl>
                 <Input
                   {...field}
@@ -153,15 +155,14 @@ export default function PullModelForm() {
                 />
               </FormControl>
               <p className="text-xs pt-1">
-                Check the{" "}
+                {t("model.library_check")}{" "}
                 <a
                   href="https://ollama.com/library"
                   target="_blank"
                   className="text-blue-500 underline"
                 >
-                  library
-                </a>{" "}
-                for a list of available models.
+                  {t("model.library_link")}
+                </a>
               </p>
               <FormMessage />
               <div className="space-y-2 w-full">
@@ -174,18 +175,18 @@ export default function PullModelForm() {
                     <div className="flex items-center gap-2">
                       <Loader2Icon className="animate-spin w-4 h-4" />
                       <span>
-                        Pulling {downloadingModel}...{" "}
+                        {t("model.pulling")} {downloadingModel}...{" "}
                         {downloadProgress.toFixed(0)}%
                       </span>
                     </div>
                   ) : (
-                    "Pull model"
+                    t("model.start_pull_model")
                   )}
                 </Button>
                 <p className="text-xs text-center">
                   {isDownloading
-                    ? "This may take a while. You can safely close this modal and continue using the app."
-                    : "Pressing the button will download the specified model to your device."}
+                    ? t("model.download_in_progress")
+                    : t("model.download_info")}
                 </p>
               </div>
             </FormItem>

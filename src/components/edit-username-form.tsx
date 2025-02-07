@@ -17,6 +17,7 @@ import React from "react";
 import { ModeToggle } from "./mode-toggle";
 import { toast } from "sonner";
 import useChatStore from "@/app/hooks/useChatStore";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -41,13 +42,15 @@ export default function EditUsernameForm({ setOpen }: EditUsernameFormProps) {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setUserName(values.username); // Update the userName in the store
-    toast.success("Name updated successfully");
+    toast.success(t("user_name_updated_successfully"));
   }
+
+  const { t } = useTranslation("translation"); // 使用 i18n 获取翻译
 
   return (
     <Form {...form}>
       <div className="w-full flex flex-col gap-4 pt-4">
-        <FormLabel>Theme</FormLabel>
+        <FormLabel>{t("theme.theme")}</FormLabel>
         <ModeToggle />
       </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -56,11 +59,11 @@ export default function EditUsernameForm({ setOpen }: EditUsernameFormProps) {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{t("name")}</FormLabel>
               <FormControl>
                 <div className="md:flex gap-4">
-                  <Input {...field} type="text" placeholder="Enter your name" />
-                  <Button type="submit">Change name</Button>
+                  <Input {...field} type="text" placeholder={t("input_name")} />
+                  <Button type="submit">{t("change_name")}</Button>
                 </div>
               </FormControl>
               <FormMessage />

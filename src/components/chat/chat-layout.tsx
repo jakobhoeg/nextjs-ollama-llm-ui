@@ -12,6 +12,7 @@ import { Message, useChat } from "ai/react";
 import Chat, { ChatProps } from "./chat";
 import ChatList from "./chat-list";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { useTranslation } from "react-i18next";
 
 interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
