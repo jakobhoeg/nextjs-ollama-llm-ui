@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import useChatStore from "@/app/hooks/useChatStore";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import QuickSuggestions from "./quick-suggestions";
 
 export interface ChatProps {
   id: string;
@@ -136,6 +137,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
           <p className="text-center text-base text-muted-foreground">
             How can I help you today?
           </p>
+          <QuickSuggestions input={input} setInput={setInput} handleSubmit={onSubmit} />
           <ChatBottombar
             input={input}
             handleInputChange={handleInputChange}
