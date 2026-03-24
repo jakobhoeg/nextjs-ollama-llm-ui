@@ -29,6 +29,7 @@ This project aims to be the easiest way for you to get started with LLMs. No ted
 - **Switch between models:** Switch between models fast with a click.
 - **Chat history:** Chats are saved and easily accessed.
 - **Light & Dark mode:** Switch between light & dark mode.
+- **Cloud LLM support:** Use [MiniMax](https://platform.minimax.io) cloud models (MiniMax-M2.7) alongside local Ollama models.
 
 # Preview
 
@@ -38,7 +39,7 @@ https://github.com/jakobhoeg/nextjs-ollama-llm-ui/assets/114422072/08eaed4f-9deb
 
 To use the web interface, these requisites must be met:
 
-1. Download [Ollama](https://ollama.com/download) and have it running. Or run it in a Docker container. Check the [docs](https://github.com/ollama/ollama) for instructions.
+1. Download [Ollama](https://ollama.com/download) and have it running. Or run it in a Docker container. Check the [docs](https://github.com/ollama/ollama) for instructions. *(Optional if using MiniMax cloud models only)*
 2. Node.js (18+) and npm is required. [Download](https://nodejs.org/en/download)
 
 # Quick start with Docker
@@ -111,7 +112,30 @@ npm install
 npm run dev
 ```
 
-**5. Go to [localhost:3000](http://localhost:3000) and start chatting with your favourite model!**
+**7. Go to [localhost:3000](http://localhost:3000) and start chatting with your favourite model!**
+
+# Using MiniMax Cloud Models
+
+You can use [MiniMax](https://platform.minimax.io) cloud models alongside local Ollama models. This allows you to chat with powerful cloud LLMs without running models locally.
+
+**1. Get a MiniMax API key from [platform.minimax.io](https://platform.minimax.io)**
+
+**2. Add the API key to your `.env` file:**
+
+```
+MINIMAX_API_KEY="your-minimax-api-key"
+```
+
+**3. Start the app and select a MiniMax model (MiniMax-M2.7 or MiniMax-M2.7-highspeed) from the model dropdown.**
+
+| Model | Description |
+|-------|-------------|
+| `MiniMax-M2.7` | Peak performance, 204K context |
+| `MiniMax-M2.7-highspeed` | Same performance, faster and more agile |
+
+> MiniMax models appear automatically in the model selector when `MINIMAX_API_KEY` is set. Ollama is not required when using cloud models only.
+
+For more details, see the [MiniMax API documentation](https://platform.minimax.io/docs/api-reference/text-openai-api).
 
 # Upcoming features
 
