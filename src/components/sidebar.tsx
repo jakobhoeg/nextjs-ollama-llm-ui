@@ -49,6 +49,7 @@ export function Sidebar({
 
   const chats = useChatStore((state) => state.chats);
   const handleDelete = useChatStore((state) => state.handleDelete);
+  const startNewChat = useChatStore((state) => state.startNewChat);
 
   return (
     <div
@@ -58,6 +59,7 @@ export function Sidebar({
       <div className=" flex flex-col justify-between p-2 max-h-fit overflow-y-auto">
         <Button
           onClick={() => {
+            startNewChat();
             router.push("/");
             if (closeSidebar) {
               closeSidebar();

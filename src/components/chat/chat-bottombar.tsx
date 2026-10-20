@@ -44,6 +44,8 @@ export default function ChatBottombar({
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const base64Images = useChatStore((state) => state.base64Images);
   const setBase64Images = useChatStore((state) => state.setBase64Images);
+  const webSearchEnabled = useChatStore((state) => state.webSearchEnabled);
+  const setWebSearchEnabled = useChatStore((state) => state.setWebSearchEnabled);
   const selectedModel = useChatStore((state) => state.selectedModel);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -93,6 +95,15 @@ export default function ChatBottombar({
             className="max-h-40 px-6 pt-6 border-0 shadow-none bg-accent rounded-lg text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed dark:bg-card"
           />
 
+          <label className="flex w-full items-center gap-2 px-4 pt-2 text-xs text-muted-foreground">
+            <input
+              type="checkbox"
+              checked={webSearchEnabled}
+              disabled={isLoading}
+              onChange={(e) => setWebSearchEnabled(e.target.checked)}
+            />
+            Web search: send this prompt to Parallel
+          </label>
           <div className="flex w-full items-center p-2">
             {isLoading ? (
               // Loading state

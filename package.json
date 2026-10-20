@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
@@ -14,6 +15,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@langchain/community": "^0.3.1",
     "@langchain/core": "^0.3.3",
+    "@modelcontextprotocol/sdk": "1.32.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
@@ -51,7 +53,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
-    "zod": "^3.23.8",
+    "zod": "^3.25.76",
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
@@ -65,6 +67,7 @@
     "eslint-config-next": "14.2.13",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.12",
+    "tsx": "^4.23.15",
     "typescript": "^5.6.2"
   }
 }

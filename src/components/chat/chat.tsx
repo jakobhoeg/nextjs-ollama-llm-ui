@@ -47,7 +47,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
     },
     onError: (error) => {
       setLoadingSubmit(false);
-      router.replace("/");
+      toast.error(error.message);
       console.error(error.message);
       console.error(error.cause);
     },
@@ -56,6 +56,7 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const base64Images = useChatStore((state) => state.base64Images);
   const setBase64Images = useChatStore((state) => state.setBase64Images);
+  const webSearchEnabled = useChatStore((state) => state.webSearchEnabled);
   const selectedModel = useChatStore((state) => state.selectedModel);
   const saveMessages = useChatStore((state) => state.saveMessages);
   const getMessagesById = useChatStore((state) => state.getMessagesById);
@@ -88,6 +89,8 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
     const requestOptions: ChatRequestOptions = {
       body: {
         selectedModel: selectedModel,
+        webSearchEnabled,
+        chatId: id,
       },
       ...(base64Images && {
         data: {
@@ -157,6 +160,8 @@ export default function Chat({ initialMessages, id, isMobile }: ChatProps) {
               const requestOptions: ChatRequestOptions = {
                 body: {
                   selectedModel: selectedModel,
+                  webSearchEnabled,
+                  chatId: id,
                 },
               };
 
